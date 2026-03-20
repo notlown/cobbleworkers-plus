@@ -12,7 +12,9 @@ All changes compared to the original [Cobbleworkers](https://github.com/Accieo/c
 - **Mod metadata** — Updated authors (notlown + Accieo), description, and links to fork repo
 
 #### Fixed
-- **Config labels** — Added missing translation keys for the entire `jobEffects` config group. All 24 effect toggles now show readable names instead of raw translation keys
+- **Config labels** — All config options now show clean, readable names instead of raw translation keys
+- **Category names** — Renamed categories to be cleaner: "Fishing" instead of "Fishing loot", "Pick-up" instead of "Pick-up loot", "Furnace Fuel" instead of "Fuel generation", etc.
+- **Effect toggles moved into jobs** — Each job category now has its own "Effects (cry, animation, particles)" toggle instead of a separate effects section. Global toggle remains in General settings
 
 ### 🎣 Fishing Job - Major Overhaul
 

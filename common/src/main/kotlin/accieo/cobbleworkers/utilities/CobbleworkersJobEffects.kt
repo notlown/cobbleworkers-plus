@@ -18,42 +18,40 @@ import net.minecraft.world.World
 
 /**
  * Handles visual and audio effects when a Pokémon successfully completes a job action.
- * Effects can be toggled globally or per-job via the jobEffects config group.
+ * Effects can be toggled globally (general.globalJobEffectsEnabled) and per job (effectsEnabled in each job group).
  */
 object CobbleworkersJobEffects {
 
-    private val effectsConfig get() = CobbleworkersConfigHolder.config.jobEffects
+    private val config get() = CobbleworkersConfigHolder.config
 
     private fun isEnabled(jobKey: String): Boolean {
-        if (!effectsConfig.globalEffectsEnabled) return false
+        if (!config.general.globalJobEffectsEnabled) return false
         return when (jobKey) {
-            "apricorn" -> effectsConfig.apricornEffects
-            "irrigation" -> effectsConfig.irrigationEffects
-            "amethyst" -> effectsConfig.amethystEffects
-            "tumblestone" -> effectsConfig.tumblestoneEffects
-            "cropHarvest" -> effectsConfig.cropHarvestEffects
-            "berries" -> effectsConfig.berriesEffects
-            "honey" -> effectsConfig.honeyEffects
-            "mints" -> effectsConfig.mintsEffects
-            "lava" -> effectsConfig.lavaEffects
-            "water" -> effectsConfig.waterEffects
-            "snow" -> effectsConfig.snowEffects
-            "fishing" -> effectsConfig.fishingEffects
-            "pickup" -> effectsConfig.pickupEffects
-            "diving" -> effectsConfig.divingEffects
-            "groundItem" -> effectsConfig.groundItemEffects
-            "netherwart" -> effectsConfig.netherwartEffects
-            "healing" -> effectsConfig.healingEffects
-            "fuel" -> effectsConfig.fuelEffects
-            "brewingStandFuel" -> effectsConfig.brewingStandFuelEffects
-            "extinguisher" -> effectsConfig.extinguisherEffects
-            "archeology" -> effectsConfig.archeologyEffects
-            "scouts" -> effectsConfig.scoutsEffects
+            "apricorn" -> config.apricorn.effectsEnabled
+            "irrigation" -> config.irrigation.effectsEnabled
+            "amethyst" -> config.amethyst.effectsEnabled
+            "tumblestone" -> config.tumblestone.effectsEnabled
+            "cropHarvest" -> config.cropHarvest.effectsEnabled
+            "berries" -> config.berries.effectsEnabled
+            "honey" -> config.honey.effectsEnabled
+            "mints" -> config.mints.effectsEnabled
+            "lava" -> config.lava.effectsEnabled
+            "water" -> config.water.effectsEnabled
+            "snow" -> config.snow.effectsEnabled
+            "fishing" -> config.fishing.effectsEnabled
+            "pickup" -> config.pickup.effectsEnabled
+            "diving" -> config.diving.effectsEnabled
+            "groundItem" -> config.groundItemGathering.effectsEnabled
+            "netherwart" -> config.netherwartHarvest.effectsEnabled
+            "healing" -> config.healing.effectsEnabled
+            "fuel" -> config.fuel.effectsEnabled
+            "brewingStandFuel" -> config.brewingStandFuel.effectsEnabled
+            "extinguisher" -> config.extinguisher.effectsEnabled
+            "archeology" -> config.archeology.effectsEnabled
+            "scouts" -> config.scouts.effectsEnabled
             else -> true
         }
     }
-
-    // ── Harvest effects: physical attack animation + particles ──
 
     fun playHarvestEffect(world: World, pokemonEntity: PokemonEntity, jobKey: String) {
         if (!isEnabled(jobKey)) return
@@ -66,14 +64,8 @@ object CobbleworkersJobEffects {
         val y = pokemonEntity.y + pokemonEntity.height * 0.8
         val z = pokemonEntity.z
 
-        world.spawnParticles(
-            ParticleTypes.HAPPY_VILLAGER,
-            x, y, z,
-            5, 0.3, 0.2, 0.3, 0.02
-        )
+        world.spawnParticles(ParticleTypes.HAPPY_VILLAGER, x, y, z, 5, 0.3, 0.2, 0.3, 0.02)
     }
-
-    // ── Generation effects: special attack animation + particles ──
 
     fun playGenerationEffect(world: World, pokemonEntity: PokemonEntity, jobKey: String) {
         if (!isEnabled(jobKey)) return
@@ -86,14 +78,8 @@ object CobbleworkersJobEffects {
         val y = pokemonEntity.y + pokemonEntity.height * 0.8
         val z = pokemonEntity.z
 
-        world.spawnParticles(
-            ParticleTypes.HAPPY_VILLAGER,
-            x, y, z,
-            5, 0.3, 0.2, 0.3, 0.02
-        )
+        world.spawnParticles(ParticleTypes.HAPPY_VILLAGER, x, y, z, 5, 0.3, 0.2, 0.3, 0.02)
     }
-
-    // ── Fishing: special animation + water splash ──
 
     fun playFishingEffect(world: World, pokemonEntity: PokemonEntity, waterPos: BlockPos?) {
         if (!isEnabled("fishing")) return
@@ -113,8 +99,6 @@ object CobbleworkersJobEffects {
         }
     }
 
-    // ── Fire jobs: special animation + flame particles ──
-
     fun playFireEffect(world: World, pokemonEntity: PokemonEntity, jobKey: String) {
         if (!isEnabled(jobKey)) return
         if (world !is ServerWorld) return
@@ -128,8 +112,6 @@ object CobbleworkersJobEffects {
 
         world.spawnParticles(ParticleTypes.FLAME, x, y, z, 6, 0.3, 0.2, 0.3, 0.02)
     }
-
-    // ── Healing: special animation + heart particles ──
 
     fun playHealEffect(world: World, pokemonEntity: PokemonEntity) {
         if (!isEnabled("healing")) return
@@ -145,8 +127,6 @@ object CobbleworkersJobEffects {
         world.spawnParticles(ParticleTypes.HEART, x, y, z, 4, 0.3, 0.2, 0.3, 0.02)
     }
 
-    // ── Water generation: special animation + splash ──
-
     fun playWaterEffect(world: World, pokemonEntity: PokemonEntity, jobKey: String) {
         if (!isEnabled(jobKey)) return
         if (world !is ServerWorld) return
@@ -161,8 +141,6 @@ object CobbleworkersJobEffects {
         world.spawnParticles(ParticleTypes.SPLASH, x, y, z, 6, 0.3, 0.2, 0.3, 0.05)
         world.spawnParticles(ParticleTypes.DRIPPING_WATER, x, y + 0.3, z, 3, 0.2, 0.1, 0.2, 0.01)
     }
-
-    // ── Extinguisher: special animation + cloud particles ──
 
     fun playExtinguishEffect(world: World, pokemonEntity: PokemonEntity) {
         if (!isEnabled("extinguisher")) return

@@ -60,7 +60,7 @@ Each job can be customized via `config/cobbleworkers.json`:
 - Set which Pokémon types can perform each job
 - Add specific Pokémon by name
 - Adjust cooldowns, search radius, and more
-- Toggle job effects (animations, particles, cry) globally or per job
+- Toggle job effects (animations, particles, cry) globally or per job — each job has its own effects toggle
 
 Cobbleworkers uses [Cloth Config](https://www.curseforge.com/minecraft/mc-mods/cloth-config) and [Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu) for easy in-game tweaking on integrated servers.
 

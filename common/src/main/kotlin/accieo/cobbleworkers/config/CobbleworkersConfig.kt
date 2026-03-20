@@ -91,39 +91,12 @@ class CobbleworkersConfig : ConfigData {
         var searchRadius = 8
         @ConfigEntry.BoundedDiscrete(min = 1, max = 8)
         var searchHeight = 5
-    }
-
-    @ConfigEntry.Gui.CollapsibleObject
-    var jobEffects = JobEffectsGroup()
-
-    class JobEffectsGroup {
-        var globalEffectsEnabled = true
-        var apricornEffects = true
-        var irrigationEffects = true
-        var amethystEffects = true
-        var tumblestoneEffects = true
-        var cropHarvestEffects = true
-        var berriesEffects = true
-        var honeyEffects = true
-        var mintsEffects = true
-        var lavaEffects = true
-        var waterEffects = true
-        var snowEffects = true
-        var fishingEffects = true
-        var pickupEffects = true
-        var divingEffects = true
-        var groundItemEffects = true
-        var netherwartEffects = true
-        var healingEffects = true
-        var fuelEffects = true
-        var brewingStandFuelEffects = true
-        var extinguisherEffects = true
-        var archeologyEffects = true
-        var scoutsEffects = true
+        var globalJobEffectsEnabled = true
     }
 
     class ApricornGroup {
         var apricornHarvestersEnabled = true
+        var effectsEnabled = true
         var apricornHarvesters: MutableList<String> = mutableListOf("ditto")
 
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.DROPDOWN)
@@ -132,6 +105,7 @@ class CobbleworkersConfig : ConfigData {
 
     class IrrigationGroup {
         var cropIrrigatorsEnabled = true
+        var effectsEnabled = true
         var cropIrrigators: MutableList<String> = mutableListOf("ditto")
         var irrigationRadius = 1
 
@@ -141,6 +115,7 @@ class CobbleworkersConfig : ConfigData {
 
     class AmethystGroup {
         var amethystHarvestersEnabled = true
+        var effectsEnabled = true
         var amethystHarvesters: MutableList<String> = mutableListOf("ditto")
 
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.DROPDOWN)
@@ -149,6 +124,7 @@ class CobbleworkersConfig : ConfigData {
 
     class TumblestoneGroup {
         var tumblestoneHarvestersEnabled = true
+        var effectsEnabled = true
         var tumblestoneHarvesters: MutableList<String> = mutableListOf("ditto")
         var shouldReplantTumblestone = true
 
@@ -158,6 +134,7 @@ class CobbleworkersConfig : ConfigData {
 
     class CropHarvestGroup {
         var cropHarvestersEnabled = true
+        var effectsEnabled = true
         var cropHarvesters: MutableList<String> = mutableListOf("ditto")
         var shouldReplantCrops = true
 
@@ -167,6 +144,7 @@ class CobbleworkersConfig : ConfigData {
 
     class BerriesGroup {
         var berryHarvestersEnabled = true
+        var effectsEnabled = true
         var berryHarvesters: MutableList<String> = mutableListOf("ditto")
 
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.DROPDOWN)
@@ -175,6 +153,7 @@ class CobbleworkersConfig : ConfigData {
 
     class HoneyGroup {
         var honeyCollectorsEnabled = true
+        var effectsEnabled = true
         var combeeLineCollectsHoney = true
         var honeyCollectors: MutableList<String> = mutableListOf("ditto")
 
@@ -187,6 +166,7 @@ class CobbleworkersConfig : ConfigData {
 
     class MintsGroup {
         var mintHarvestersEnabled = true
+        var effectsEnabled = true
         var mintHarvesters: MutableList<String> = mutableListOf("ditto")
 
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.DROPDOWN)
@@ -195,6 +175,7 @@ class CobbleworkersConfig : ConfigData {
 
     class LavaGroup {
         var lavaGeneratorsEnabled = true
+        var effectsEnabled = true
         var lavaGenerators: MutableList<String> = mutableListOf("ditto")
         var lavaGenerationCooldownSeconds: Long = 90
 
@@ -204,6 +185,7 @@ class CobbleworkersConfig : ConfigData {
 
     class WaterGroup {
         var waterGeneratorsEnabled = true
+        var effectsEnabled = true
         var waterGenerators: MutableList<String> = mutableListOf("ditto")
         var waterGenerationCooldownSeconds: Long = 90
 
@@ -213,6 +195,7 @@ class CobbleworkersConfig : ConfigData {
 
     class SnowGroup {
         var snowGeneratorsEnabled = true
+        var effectsEnabled = true
         var snowGenerators: MutableList<String> = mutableListOf("ditto")
         var snowGenerationCooldownSeconds: Long = 90
 
@@ -222,6 +205,7 @@ class CobbleworkersConfig : ConfigData {
 
     class FishingGroup {
         var fishingLootGeneratorsEnabled = true
+        var effectsEnabled = true
         var fishingLootGenerators: MutableList<String> = mutableListOf("ditto")
         var fishingLootGenerationCooldownSeconds: Long = 60
         var fishingLootTreasureChance = 1
@@ -232,6 +216,7 @@ class CobbleworkersConfig : ConfigData {
 
     class PickUpGroup {
         var pickUpLootersEnabled = true
+        var effectsEnabled = true
         var pickUpLootingCooldownSeconds: Long = 120
         var lootTables: MutableList<String> = mutableListOf(
             "cobblemon:sets/any_ancient_held_item",
@@ -247,6 +232,7 @@ class CobbleworkersConfig : ConfigData {
 
     class DivingGroup {
         var divingLootersEnabled = true
+        var effectsEnabled = true
         var divingLootingCooldownSeconds: Long = 210
         var lootTables: MutableList<String> = mutableListOf(
             "cobbleworkers:dive_treasure",
@@ -255,6 +241,7 @@ class CobbleworkersConfig : ConfigData {
 
     class GroundItemGathererGroup {
         var groundItemGatheringEnabled = true
+        var effectsEnabled = true
         var groundItemGatherers: MutableList<String> = mutableListOf("ditto")
 
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.DROPDOWN)
@@ -263,6 +250,7 @@ class CobbleworkersConfig : ConfigData {
 
     class NetherwartGroup {
         var netherwartHarvestersEnabled = true
+        var effectsEnabled = true
         var netherwartHarvesters: MutableList<String> = mutableListOf("ditto")
         var shouldReplantNetherwart = true
 
@@ -272,6 +260,7 @@ class CobbleworkersConfig : ConfigData {
 
     class HealingGroup {
         var healersEnabled = true
+        var effectsEnabled = true
         var healers: MutableList<String> = mutableListOf("ditto")
         var healingMoves: MutableList<String> = mutableListOf(
             "wish",
@@ -294,6 +283,7 @@ class CobbleworkersConfig : ConfigData {
 
     class FuelGroup {
         var fuelGeneratorsEnabled = true
+        var effectsEnabled = true
         var fuelGenerators: MutableList<String> = mutableListOf("ditto")
         var fuelGenerationCooldownSeconds: Long = 80
         var burnTimeSeconds = 80
@@ -304,6 +294,7 @@ class CobbleworkersConfig : ConfigData {
 
     class BrewingStandFuelGroup {
         var fuelGeneratorsEnabled = true
+        var effectsEnabled = true
         var fuelGenerators: MutableList<String> = mutableListOf("ditto")
         var fuelGenerationCooldownSeconds: Long = 80
         @ConfigEntry.BoundedDiscrete(min = 1, max = 20)
@@ -315,6 +306,7 @@ class CobbleworkersConfig : ConfigData {
 
     class ExtinguisherGroup {
         var extinguishersEnabled = true
+        var effectsEnabled = true
         var extinguishers: MutableList<String> = mutableListOf("ditto")
         var extinguishingRadius = 1
 
@@ -324,6 +316,7 @@ class CobbleworkersConfig : ConfigData {
 
     class ArcheologyGroup {
         var archeologistsEnabled = true
+        var effectsEnabled = true
         var archeologists: MutableList<String> = mutableListOf("ditto")
 
         var archeologyLootingCooldownSeconds: Long = 80
@@ -338,6 +331,7 @@ class CobbleworkersConfig : ConfigData {
 
     class ScoutGroup {
         var scoutsEnabled = true
+        var effectsEnabled = true
         var scouts: MutableList<String> = mutableListOf("ditto")
 
         var scoutGenerationCooldownSeconds: Long = 80
