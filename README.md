@@ -1,22 +1,104 @@
-# Cobbleworkers
+# Cobbleworkers Plus
 
 [![License: MPL-2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg?style=flat-square)](https://opensource.org/licenses/MPL-2.0)
-[![modrinth-badge](https://img.shields.io/modrinth/dt/cobbleworkers?label=Modrinth&logo=Modrinth&style=flat-square)](https://modrinth.com/mod/cobbleworkers/versions)
-[![curseforge-badge](https://img.shields.io/curseforge/dt/1296055?style=flat-square&logo=curseforge&label=CurseForge)](https://minecraft.curseforge.com/projects/1296055/files)
+
+> 🔧 Enhanced fork of [Cobbleworkers](https://github.com/Accieo/cobbleworkers) by Accieo
 
 ![cobbleworkers-icon](/common/src/main/resources/assets/cobbleworkers/icon.png)
 
-Cobbleworkers is a companion server-side mod for Cobblemon that turns the **Pasture Block** into a powerful utility block.
+**Cobbleworkers Plus** is an enhanced fork of Cobbleworkers — a companion server-side mod for [Cobblemon](https://cobblemon.com/) that turns the **Pasture Block** into a powerful utility block, giving your Pokémon real jobs.
 
-## Documentation
+This fork focuses on improving existing job mechanics, fixing bugs, and adding quality-of-life features that make the mod more fun and reliable.
 
-Visit the documentation to get an overview of the mod [here](https://docs.accieo.com/cobbleworkers).
+## ✨ What's Different from the Original?
 
-## Configuration
-Each job can be customized via a config file. Enable/disable job types and specify which Pokémon can perform them.
+### 🎣 Fishing Job - Complete Overhaul
+- **No more water-standing requirement** — Pokémon no longer need to be submerged in water. Standing next to water is enough.
+- **Active water navigation** — Pokémon actively walk to nearby water blocks to fish, then return to a chest to deposit loot. Uses the configurable `searchRadius` (default: 10 blocks).
+- **Loot generation fix** — Fixed an issue where the fishing loot table returned empty results because the origin position was set to the Pasture Block instead of the Pokémon's position near water.
+- **Catch effects** — Pokémon now play their cry and spawn splash/fishing/bubble particles on a successful catch.
 
-Cobbleworkers uses [Cloth Config](https://www.curseforge.com/minecraft/mc-mods/cloth-config) and [Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu) for easy in-game tweaking
-when using the minecraft integrated server, for servers use the config file.
+> See the full [CHANGELOG.md](CHANGELOG.md) for all technical details.
 
-## License
-Licensed under [MPL-2.0](https://mozilla.org/MPL/2.0/)
+## 📋 All Available Jobs
+
+| Job | Pokémon Type | Description |
+|-----|-------------|-------------|
+| 🎣 Fishing | Water | Catches fish and treasure from nearby water |
+| 🤿 Diving | Knows "Dive" | Dives for underwater treasure |
+| 🌾 Crop Harvesting | Grass | Harvests and replants crops |
+| 🫐 Berry Harvesting | Grass | Harvests berries |
+| 🌱 Apricorn Harvesting | Bug | Harvests apricorns |
+| 💎 Amethyst Harvesting | Rock | Harvests amethyst clusters |
+| 🪨 Tumblestone Harvesting | Steel | Harvests and replants tumblestones |
+| 🌿 Mint Harvesting | Fairy | Harvests mints |
+| 🍯 Honey Collecting | Combee line | Collects and generates honey |
+| 🌊 Water Generation | Water | Fills cauldrons with water |
+| 🌋 Lava Generation | Fire | Fills cauldrons with lava |
+| ❄️ Snow Generation | Ice | Fills cauldrons with powder snow |
+| 🔥 Fuel Generation | Fire | Adds fuel to furnaces |
+| ⚗️ Brewing Fuel | Dragon | Adds fuel to brewing stands |
+| 🧯 Fire Extinguishing | Water | Extinguishes nearby fires |
+| 💚 Healing | Chansey line / Healing moves | Gives players regeneration |
+| 🎒 Pick-up Loot | Ability: Pickup | Generates random loot |
+| 🏺 Archeology | Ground | Generates archeology loot |
+| 🗺️ Scouting | Flying | Creates explorer maps |
+| 🧹 Item Gathering | Psychic | Picks up items on the ground |
+| 🌿 Netherwart Harvesting | Ghost | Harvests and replants netherwart |
+| 💧 Crop Irrigation | Water | Hydrates farmland |
+
+## ⚙️ Configuration
+
+Each job can be customized via `config/cobbleworkers.json`:
+- Enable/disable individual jobs
+- Set which Pokémon types can perform each job
+- Add specific Pokémon by name
+- Adjust cooldowns, search radius, and more
+
+Cobbleworkers uses [Cloth Config](https://www.curseforge.com/minecraft/mc-mods/cloth-config) and [Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu) for easy in-game tweaking on integrated servers.
+
+## 🛠️ Tech Stack
+
+- **Minecraft:** 1.21.1
+- **Mod Loader:** Fabric (also supports NeoForge)
+- **Language:** Kotlin
+- **Dependencies:** Cobblemon 1.7.0+, Fabric API, Fabric Language Kotlin, Cloth Config
+
+## 📦 Building from Source
+
+```bash
+git clone https://github.com/notlown/cobbleworkers-plus.git
+cd cobbleworkers-plus
+./gradlew fabric:build
+```
+
+The compiled JAR will be in `fabric/build/libs/`.
+
+> Requires Java 21.
+
+## 🏗️ Project Structure
+
+```
+cobbleworkers-plus/
+├── common/src/main/kotlin/accieo/cobbleworkers/
+│   ├── jobs/              # All job implementations (FishingLootGenerator, DiveLooter, etc.)
+│   ├── config/            # Config classes and holders
+│   ├── cache/             # Block scanner cache management
+│   ├── utilities/         # Navigation, inventory, crop, cauldron utils
+│   ├── enums/             # JobType enum
+│   ├── interfaces/        # Worker interface
+│   └── mixin/             # Pasture block entity mixin
+├── fabric/                # Fabric-specific code
+├── neoforge/              # NeoForge-specific code
+├── CHANGELOG.md           # All changes vs. original
+└── README.md
+```
+
+## 📜 Credits
+
+- **Original mod:** [Cobbleworkers](https://github.com/Accieo/cobbleworkers) by [Accieo](https://github.com/Accieo)
+- **Fork enhancements:** [notlown](https://github.com/notlown)
+
+## 📄 License
+
+Licensed under [MPL-2.0](https://mozilla.org/MPL/2.0/) — same as the original.
