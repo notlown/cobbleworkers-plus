@@ -22,7 +22,18 @@ This fork focuses on improving existing job mechanics, fixing bugs, and adding q
 - **Distance-based chest selection** — Each Pokémon goes to its nearest free chest instead of all targeting the same one
 - **No more unnecessary item drops** — Retries all chests when they're full instead of dropping items on the ground
 
-### 🎬 Job Effects — All 22 Jobs
+### 🛡️ New Job: Guard
+- **Wild Pokémon repelling** — Fighting-type Pokémon patrol and chase away wild Pokémon near the Pasture Block
+- **XP reward** — Guard earns 50 XP per repel (configurable, half an XS Experience Candy)
+- **Attack animations + angry/crit particles** on successful repel
+
+### 😴 Stamina System
+- **10 charges** per Pokémon (configurable) — each successful action costs 1 charge
+- **Sleep when exhausted** — Pokémon rests for 60 seconds with sleep pose + Zzz particles
+- **Wake-up effect** — Cry + particles when stamina is restored
+- **Configurable** — toggle on/off, adjust charges and rest duration
+
+### 🎬 Job Effects — All 23 Jobs
 - **Attack animations** — Uses Cobblemon's animation fallback chains (e.g. `watergun → bubble → spray → special`) so every Pokémon plays a fitting animation
 - **Themed particles** — Splash for fishing, flames for fire, hearts for healing, green sparkles for harvesting, clouds for extinguishing
 - **Pokémon cry** on every successful action
@@ -55,6 +66,7 @@ This fork focuses on improving existing job mechanics, fixing bugs, and adding q
 | 🗺️ Scouting | Flying | Creates explorer maps |
 | 🧹 Item Gathering | Psychic | Picks up items on the ground |
 | 🌿 Netherwart Harvesting | Ghost | Harvests and replants netherwart |
+| 🛡️ Guard | Fighting | Repels wild Pokémon and earns XP |
 | 💧 Crop Irrigation | Water | Hydrates farmland |
 
 ## ⚙️ Configuration

@@ -55,6 +55,27 @@ All changes compared to the original [Cobbleworkers](https://github.com/Accieo/c
 - **Per-job config toggles** — `effectsEnabled` in each job category + `globalJobEffectsEnabled` master toggle
 - **Animation fallback chains** — Only ~8% of Pokémon have battle animations. System sends multiple animation names; Pokémon plays the first one it has. Cry works for ~81% of Pokémon. Particles work for all
 
+### 🛡️ New Job: Guard
+
+#### Added
+- **Guard job** — Fighting-type Pokémon patrol the area around the Pasture Block, chase and repel wild Pokémon
+- **XP reward** — Guard earns 50 XP per wild Pokémon repelled (half an XS Experience Candy, configurable)
+- **Config options:** enabled, cooldown (30s default), patrol radius (10 blocks), XP per repel, Pokémon type (FIGHTING default)
+- **Custom ExperienceSource** (`GuardExperienceSource`) marked as sidemod for compatibility
+- **Effects:** Angry villager particles while patrolling, attack animation + crit particles + smoke on repel
+
+### 😴 Stamina System
+
+#### Added
+- **Stamina charges** — Each Pokémon has 10 charges (configurable). Each successful job action costs 1 charge
+- **Rest phase** — At 0 charges, Pokémon stops working and goes to sleep for 60 seconds (configurable)
+- **Sleep visualization:**
+  - Sleep animation/pose on the Pokémon
+  - Note + cloud particles every 1.5 seconds (Zzz effect)
+- **Wake-up effect** — Cry + happy villager particle burst when stamina is restored
+- **Config:** `staminaEnabled`, `staminaCharges` (1-50), `restDurationSeconds` in General settings
+- **All jobs affected** — Stamina is checked in WorkerDispatcher before any job tick runs
+
 ### 📝 Files Changed
 
 | File | Change |
@@ -64,6 +85,9 @@ All changes compared to the original [Cobbleworkers](https://github.com/Accieo/c
 | `CobbleworkersInventoryUtils.kt` | Fixed chest sorting (by Pokemon distance), retry logic instead of dropping items |
 | `CobbleworkersConfig.kt` | Added `effectsEnabled` per job, `globalJobEffectsEnabled`, reordered fields |
 | `ApricornHarvester.kt` | Migrated to 3-phase effect system (attack + cry on harvest) |
+| `Guard.kt` | New: Guard job with wild Pokemon repelling and XP rewards |
+| `CobbleworkersStamina.kt` | New: Stamina system with charges, rest phase, sleep visualization |
+| `WorkerDispatcher.kt` | Added Guard to worker registry, stamina check before job ticks |
 | All other 20 job files | Added legacy effect calls on success |
 | `en_us.json` | Complete rewrite: clean labels, consistent naming, all new config entries |
 | `fabric.mod.json` | Renamed to Cobbleworkers Plus, updated metadata |

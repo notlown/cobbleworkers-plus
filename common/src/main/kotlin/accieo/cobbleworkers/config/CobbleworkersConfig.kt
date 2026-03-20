@@ -84,6 +84,9 @@ class CobbleworkersConfig : ConfigData {
     @ConfigEntry.Gui.CollapsibleObject
     var scouts = ScoutGroup()
 
+    @ConfigEntry.Gui.CollapsibleObject
+    var guard = GuardGroup()
+
     class GeneralGroup {
         @ConfigEntry.BoundedDiscrete(min = 10, max = 30)
         var blocksScannedPerTick = 15
@@ -92,6 +95,10 @@ class CobbleworkersConfig : ConfigData {
         @ConfigEntry.BoundedDiscrete(min = 1, max = 8)
         var searchHeight = 5
         var globalJobEffectsEnabled = true
+        var staminaEnabled = true
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 50)
+        var staminaCharges = 10
+        var restDurationSeconds: Long = 60
     }
 
     class ApricornGroup {
@@ -316,5 +323,18 @@ class CobbleworkersConfig : ConfigData {
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.DROPDOWN)
         var typeScouts: CobbleworkersConfigPokemonType = CobbleworkersConfigPokemonType.FLYING
         var scouts: MutableList<String> = mutableListOf("ditto")
+    }
+
+    class GuardGroup {
+        var guardsEnabled = true
+        var effectsEnabled = true
+        var guardCooldownSeconds: Long = 30
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 20)
+        var guardRadius = 10
+        @ConfigEntry.BoundedDiscrete(min = 10, max = 500)
+        var xpPerRepel = 50
+        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.DROPDOWN)
+        var typeGuards: CobbleworkersConfigPokemonType = CobbleworkersConfigPokemonType.FIGHTING
+        var guards: MutableList<String> = mutableListOf("ditto")
     }
 }

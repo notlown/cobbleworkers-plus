@@ -10,6 +10,7 @@ package accieo.cobbleworkers.jobs
 
 import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
+import accieo.cobbleworkers.utilities.CobbleworkersStamina
 import accieo.cobbleworkers.utilities.DeferredBlockScanner
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import net.minecraft.util.math.BlockPos
@@ -44,6 +45,7 @@ object WorkerDispatcher {
         SnowGenerator,
         TumblestoneHarvester,
         WaterGenerator,
+        Guard,
     )
 
     /**
@@ -70,6 +72,9 @@ object WorkerDispatcher {
      * Called ONCE per Pokémon in the pasture per tick.
      */
     fun tickPokemon(world: World, pastureOrigin: BlockPos, pokemonEntity: PokemonEntity) {
+        // Check stamina - if resting, skip all jobs
+        if (CobbleworkersStamina.isResting(world, pokemonEntity)) return
+
         workers
             .filter { it.shouldRun(pokemonEntity) }
             .forEach { it.tick(world, pastureOrigin, pokemonEntity) }

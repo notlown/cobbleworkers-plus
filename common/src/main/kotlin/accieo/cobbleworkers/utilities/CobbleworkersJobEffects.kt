@@ -48,6 +48,7 @@ object CobbleworkersJobEffects {
             "extinguisher" -> config.extinguisher.effectsEnabled
             "archeology" -> config.archeology.effectsEnabled
             "scouts" -> config.scouts.effectsEnabled
+            "guard" -> config.guard.effectsEnabled
             else -> true
         }
     }
@@ -57,6 +58,9 @@ object CobbleworkersJobEffects {
      * Uses the same approach as PokemonEntity.cry() internally: finds nearby ServerPlayerEntity
      * instances and sends via CobblemonNetwork.
      */
+    fun sendAnimationPublic(world: World, pokemonEntity: PokemonEntity, vararg animationNames: String) =
+        sendAnimation(world, pokemonEntity, *animationNames)
+
     private fun sendAnimation(world: World, pokemonEntity: PokemonEntity, vararg animationNames: String) {
         if (world !is ServerWorld) return
         val packet = PlayPosableAnimationPacket(
@@ -103,6 +107,8 @@ object CobbleworkersJobEffects {
                 sendAnimation(world, pokemonEntity, "watergun", "bubble", "spray", "special")
             "healing" ->
                 sendAnimation(world, pokemonEntity, "wish", "special")
+            "guard" ->
+                sendAnimation(world, pokemonEntity, "tackle", "bite", "crunch", "scratch", "charge", "blunt", "physical")
             "apricorn", "amethyst", "berries", "tumblestone", "cropHarvest",
             "mints", "netherwart", "honey", "irrigation", "groundItem" ->
                 sendAnimation(world, pokemonEntity, "tackle", "scratch", "pound", "charge", "blunt", "physical")
@@ -135,6 +141,11 @@ object CobbleworkersJobEffects {
             "healing" -> {
                 world.spawnParticles(ParticleTypes.HEART, x, y + h, z, 10, 0.5, 0.3, 0.5, 0.02)
                 world.spawnParticles(ParticleTypes.HAPPY_VILLAGER, x, y + h * 0.5, z, 15, 0.4, 0.3, 0.4, 0.02)
+            }
+            "guard" -> {
+                world.spawnParticles(ParticleTypes.ANGRY_VILLAGER, x, y + h, z, 8, 0.4, 0.3, 0.4, 0.02)
+                world.spawnParticles(ParticleTypes.CRIT, x, y + h * 0.5, z, 15, 0.5, 0.3, 0.5, 0.1)
+                world.spawnParticles(ParticleTypes.SMOKE, x, y, z, 10, 0.4, 0.2, 0.4, 0.03)
             }
             else -> {
                 world.spawnParticles(ParticleTypes.HAPPY_VILLAGER, x, y + h, z, 15, 0.5, 0.3, 0.5, 0.03)
@@ -177,6 +188,9 @@ object CobbleworkersJobEffects {
                 world.spawnParticles(ParticleTypes.BUBBLE_POP, x, y + 0.3, z, 5, 0.3, 0.2, 0.3, 0.03)
                 world.spawnParticles(ParticleTypes.BUBBLE, x, y, z, 5, 0.3, 0.2, 0.3, 0.03)
             }
+            "guard" -> {
+                world.spawnParticles(ParticleTypes.ANGRY_VILLAGER, x, y + h, z, 2, 0.2, 0.1, 0.2, 0.01)
+            }
             else -> {
                 world.spawnParticles(ParticleTypes.HAPPY_VILLAGER, x, y + h, z, 3, 0.3, 0.2, 0.3, 0.02)
             }
@@ -192,6 +206,9 @@ object CobbleworkersJobEffects {
         if (world !is ServerWorld) return
 
         sendAnimation(world, pokemonEntity, "cry")
+
+        // Consume one stamina charge on success
+        CobbleworkersStamina.useCharge(world, pokemonEntity)
     }
 
     // ── Legacy single-shot effects (used by jobs not yet migrated to 3-phase) ──
@@ -199,43 +216,30 @@ object CobbleworkersJobEffects {
     fun playHarvestEffect(world: World, pokemonEntity: PokemonEntity, jobKey: String) {
         if (!isEnabled(jobKey)) return
         if (world !is ServerWorld) return
-
         sendAnimation(world, pokemonEntity, "cry")
         sendAnimation(world, pokemonEntity, "physical")
-
-        val x = pokemonEntity.x
-        val y = pokemonEntity.y + pokemonEntity.height * 0.8
-        val z = pokemonEntity.z
-
+        CobbleworkersStamina.useCharge(world, pokemonEntity)
+        val x = pokemonEntity.x; val y = pokemonEntity.y + pokemonEntity.height * 0.8; val z = pokemonEntity.z
         world.spawnParticles(ParticleTypes.HAPPY_VILLAGER, x, y, z, 5, 0.3, 0.2, 0.3, 0.02)
     }
 
     fun playGenerationEffect(world: World, pokemonEntity: PokemonEntity, jobKey: String) {
         if (!isEnabled(jobKey)) return
         if (world !is ServerWorld) return
-
         sendAnimation(world, pokemonEntity, "cry")
         sendAnimation(world, pokemonEntity, "special")
-
-        val x = pokemonEntity.x
-        val y = pokemonEntity.y + pokemonEntity.height * 0.8
-        val z = pokemonEntity.z
-
+        CobbleworkersStamina.useCharge(world, pokemonEntity)
+        val x = pokemonEntity.x; val y = pokemonEntity.y + pokemonEntity.height * 0.8; val z = pokemonEntity.z
         world.spawnParticles(ParticleTypes.HAPPY_VILLAGER, x, y, z, 5, 0.3, 0.2, 0.3, 0.02)
     }
 
     fun playFishingEffect(world: World, pokemonEntity: PokemonEntity, waterPos: BlockPos?) {
         if (!isEnabled("fishing")) return
         if (world !is ServerWorld) return
-
         sendAnimation(world, pokemonEntity, "cry")
         sendAnimation(world, pokemonEntity, "special")
-
-        // Spawn particles at the Pokemon's feet level (water surface)
-        val x = pokemonEntity.x
-        val y = pokemonEntity.y
-        val z = pokemonEntity.z
-
+        CobbleworkersStamina.useCharge(world, pokemonEntity)
+        val x = pokemonEntity.x; val y = pokemonEntity.y; val z = pokemonEntity.z
         world.spawnParticles(ParticleTypes.SPLASH, x, y, z, 8, 0.3, 0.1, 0.3, 0.05)
         world.spawnParticles(ParticleTypes.FISHING, x, y, z, 4, 0.2, 0.0, 0.2, 0.01)
         world.spawnParticles(ParticleTypes.BUBBLE, x, y - 0.3, z, 6, 0.2, 0.1, 0.2, 0.05)
@@ -244,42 +248,30 @@ object CobbleworkersJobEffects {
     fun playFireEffect(world: World, pokemonEntity: PokemonEntity, jobKey: String) {
         if (!isEnabled(jobKey)) return
         if (world !is ServerWorld) return
-
         sendAnimation(world, pokemonEntity, "cry")
         sendAnimation(world, pokemonEntity, "special")
-
-        val x = pokemonEntity.x
-        val y = pokemonEntity.y + pokemonEntity.height * 0.5
-        val z = pokemonEntity.z
-
+        CobbleworkersStamina.useCharge(world, pokemonEntity)
+        val x = pokemonEntity.x; val y = pokemonEntity.y + pokemonEntity.height * 0.5; val z = pokemonEntity.z
         world.spawnParticles(ParticleTypes.FLAME, x, y, z, 6, 0.3, 0.2, 0.3, 0.02)
     }
 
     fun playHealEffect(world: World, pokemonEntity: PokemonEntity) {
         if (!isEnabled("healing")) return
         if (world !is ServerWorld) return
-
         sendAnimation(world, pokemonEntity, "cry")
         sendAnimation(world, pokemonEntity, "special")
-
-        val x = pokemonEntity.x
-        val y = pokemonEntity.y + pokemonEntity.height * 0.8
-        val z = pokemonEntity.z
-
+        CobbleworkersStamina.useCharge(world, pokemonEntity)
+        val x = pokemonEntity.x; val y = pokemonEntity.y + pokemonEntity.height * 0.8; val z = pokemonEntity.z
         world.spawnParticles(ParticleTypes.HEART, x, y, z, 4, 0.3, 0.2, 0.3, 0.02)
     }
 
     fun playWaterEffect(world: World, pokemonEntity: PokemonEntity, jobKey: String) {
         if (!isEnabled(jobKey)) return
         if (world !is ServerWorld) return
-
         sendAnimation(world, pokemonEntity, "cry")
         sendAnimation(world, pokemonEntity, "special")
-
-        val x = pokemonEntity.x
-        val y = pokemonEntity.y + pokemonEntity.height * 0.5
-        val z = pokemonEntity.z
-
+        CobbleworkersStamina.useCharge(world, pokemonEntity)
+        val x = pokemonEntity.x; val y = pokemonEntity.y + pokemonEntity.height * 0.5; val z = pokemonEntity.z
         world.spawnParticles(ParticleTypes.SPLASH, x, y, z, 6, 0.3, 0.2, 0.3, 0.05)
         world.spawnParticles(ParticleTypes.DRIPPING_WATER, x, y + 0.3, z, 3, 0.2, 0.1, 0.2, 0.01)
     }
@@ -287,9 +279,9 @@ object CobbleworkersJobEffects {
     fun playExtinguishEffect(world: World, pokemonEntity: PokemonEntity) {
         if (!isEnabled("extinguisher")) return
         if (world !is ServerWorld) return
-
         sendAnimation(world, pokemonEntity, "cry")
         sendAnimation(world, pokemonEntity, "special")
+        CobbleworkersStamina.useCharge(world, pokemonEntity)
 
         val x = pokemonEntity.x
         val y = pokemonEntity.y + pokemonEntity.height * 0.5

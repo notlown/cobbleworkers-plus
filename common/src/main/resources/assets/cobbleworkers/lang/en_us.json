@@ -5,6 +5,9 @@
   "text.autoconfig.cobbleworkers.option.general.searchHeight": "Search height",
   "text.autoconfig.cobbleworkers.option.general.blocksScannedPerTick": "Blocks scanned per tick per pasture",
   "text.autoconfig.cobbleworkers.option.general.globalJobEffectsEnabled": "Enable job effects (cry, animations, particles)",
+  "text.autoconfig.cobbleworkers.option.general.staminaEnabled": "Enable stamina system",
+  "text.autoconfig.cobbleworkers.option.general.staminaCharges": "Stamina charges before resting",
+  "text.autoconfig.cobbleworkers.option.general.restDurationSeconds": "Rest duration (seconds)",
 
   "text.autoconfig.cobbleworkers.option.apricorn": "Apricorn Harvesting",
   "text.autoconfig.cobbleworkers.option.apricorn.apricornHarvestersEnabled": "Enabled",
@@ -162,5 +165,14 @@
   "text.autoconfig.cobbleworkers.option.scouts.useAllStructures": "Use all registered structures",
   "text.autoconfig.cobbleworkers.option.scouts.mapNameIsHidden": "Hide structure name on map",
   "text.autoconfig.cobbleworkers.option.scouts.structureTags": "Structure tags",
-  "text.autoconfig.cobbleworkers.option.scouts.typeScouts": "Pokémon type"
+  "text.autoconfig.cobbleworkers.option.scouts.typeScouts": "Pokémon type",
+
+  "text.autoconfig.cobbleworkers.option.guard": "Guard",
+  "text.autoconfig.cobbleworkers.option.guard.guardsEnabled": "Enabled",
+  "text.autoconfig.cobbleworkers.option.guard.effectsEnabled": "Effects (cry, animation, particles)",
+  "text.autoconfig.cobbleworkers.option.guard.guardCooldownSeconds": "Cooldown (seconds)",
+  "text.autoconfig.cobbleworkers.option.guard.guardRadius": "Patrol radius",
+  "text.autoconfig.cobbleworkers.option.guard.xpPerRepel": "XP per wild Pokémon repelled",
+  "text.autoconfig.cobbleworkers.option.guard.typeGuards": "Pokémon type",
+  "text.autoconfig.cobbleworkers.option.guard.guards": "Additional Pokémon (exceptions)"
 }
