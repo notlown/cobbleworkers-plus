@@ -13,7 +13,6 @@ import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import com.cobblemon.mod.common.CobblemonNetwork
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import com.cobblemon.mod.common.net.messages.client.animation.PlayPosableAnimationPacket
-import org.apache.logging.log4j.LogManager
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.server.network.ServerPlayerEntity
 import net.minecraft.server.world.ServerWorld
@@ -22,7 +21,6 @@ import net.minecraft.util.math.Box
 import net.minecraft.world.World
 
 object CobbleworkersJobEffects {
-    private val LOG = LogManager.getLogger("CW-Effects")
     private val config get() = CobbleworkersConfigHolder.config
 
     private fun isEnabled(jobKey: String): Boolean {
