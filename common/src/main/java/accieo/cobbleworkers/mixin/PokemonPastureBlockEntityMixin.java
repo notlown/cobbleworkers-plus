@@ -11,6 +11,7 @@ package accieo.cobbleworkers.mixin;
 import accieo.cobbleworkers.Cobbleworkers;
 import accieo.cobbleworkers.cache.CobbleworkersCacheManager;
 import accieo.cobbleworkers.jobs.WorkerDispatcher;
+import accieo.cobbleworkers.utilities.CobbleworkersPassiveXp;
 import accieo.cobbleworkers.utilities.CobbleworkersStamina;
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity;
 import com.cobblemon.mod.common.entity.PoseType;
@@ -54,6 +55,11 @@ public class PokemonPastureBlockEntityMixin {
 
             PokemonEntity pokemonEntity = pokemon.getEntity();
             if (pokemonEntity == null) continue;
+
+            // Passive XP for all pastured Pokemon (even sleeping ones)
+            try {
+                CobbleworkersPassiveXp.INSTANCE.tick(world, pokemonEntity);
+            } catch (Exception ignored) { }
 
             // Check if Pokemon is resting due to stamina - tick the rest timer but skip jobs
             if (CobbleworkersStamina.INSTANCE.isResting(world, pokemonEntity)) continue;

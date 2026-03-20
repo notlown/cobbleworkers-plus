@@ -28,6 +28,11 @@ This fork focuses on improving existing job mechanics, fixing bugs, and adding q
 - **Level cap aware** — At max level, 20% chance to generate loot instead (Exp Candies, 1% Rare Candy, potions). Full loot table, customizable
 - **Attack animations + angry/crit particles** on successful repel
 
+### 📈 Passive XP
+- **All pastured Pokémon** slowly gain XP over time (even sleeping/idle ones)
+- Default: 10 XP every 5 minutes (~1 level per real day of play)
+- Configurable amount and interval, respects level cap
+
 ### 😴 Stamina System
 - **10 charges** per Pokémon (configurable) — each successful action costs 1 charge
 - **Sleep when exhausted** — Pokémon rests for 60 seconds with sleep pose + Zzz particles

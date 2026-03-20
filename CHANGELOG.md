@@ -73,6 +73,14 @@ All changes compared to the original [Cobbleworkers](https://github.com/Accieo/c
 - **Custom ExperienceSource** (`GuardExperienceSource`) marked as sidemod for compatibility
 - **Effects:** Angry villager particles while patrolling, attack animation + crit particles + smoke on repel
 
+### 📈 Passive XP
+
+#### Added
+- **Passive XP** — All Pokémon in the Pasture slowly gain XP over time, even while sleeping or idle
+- Default: **10 XP every 5 minutes** (~1 level per real day of play at mid-levels)
+- Respects level cap (`canLevelUpFurther()`)
+- **Config:** `passiveXpEnabled`, `passiveXpAmount` (1-100), `passiveXpIntervalSeconds`
+
 ### 😴 Stamina System
 
 #### Added
@@ -94,6 +102,7 @@ All changes compared to the original [Cobbleworkers](https://github.com/Accieo/c
 | `CobbleworkersInventoryUtils.kt` | Fixed chest sorting (by Pokemon distance), retry logic instead of dropping items |
 | `CobbleworkersConfig.kt` | Added `effectsEnabled` per job, `globalJobEffectsEnabled`, reordered fields |
 | `ApricornHarvester.kt` | Migrated to 3-phase effect system (attack + cry on harvest) |
+| `CobbleworkersPassiveXp.kt` | New: passive XP system for all pastured Pokemon |
 | `Guard.kt` | New: Guard job with wild Pokemon repelling and XP rewards |
 | `CobbleworkersStamina.kt` | New: Stamina system with charges, rest phase, sleep visualization |
 | `WorkerDispatcher.kt` | Added Guard to worker registry, stamina check before job ticks |
