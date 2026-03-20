@@ -15,6 +15,8 @@ All changes compared to the original [Cobbleworkers](https://github.com/Accieo/c
 - **Config labels** — All config options now show clean, readable names instead of raw translation keys
 - **Category names** — Renamed categories to be cleaner: "Fishing" instead of "Fishing loot", "Pick-up" instead of "Pick-up loot", "Furnace Fuel" instead of "Fuel generation", etc.
 - **Effect toggles moved into jobs** — Each job category now has its own "Effects (cry, animation, particles)" toggle instead of a separate effects section. Global toggle remains in General settings
+- **Animations and cry now work server-side** — Fixed `cry()` and `playAnimation()` which only worked client-side. Now uses `PlayPosableAnimationPacket` to send animation packets directly to nearby players from the server
+- **Pokemon lists renamed** — All per-job Pokémon lists now consistently named "Additional Pokémon (exceptions)" and moved to the bottom of each category
 
 ### 🎣 Fishing Job - Major Overhaul
 

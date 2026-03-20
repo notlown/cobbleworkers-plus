@@ -11,15 +11,12 @@ package accieo.cobbleworkers.utilities
 
 import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.cobblemon.mod.common.net.messages.client.animation.PlayPosableAnimationPacket
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
 
-/**
- * Handles visual and audio effects when a Pokémon successfully completes a job action.
- * Effects can be toggled globally (general.globalJobEffectsEnabled) and per job (effectsEnabled in each job group).
- */
 object CobbleworkersJobEffects {
 
     private val config get() = CobbleworkersConfigHolder.config
@@ -53,12 +50,30 @@ object CobbleworkersJobEffects {
         }
     }
 
+    /**
+     * Sends a Cobblemon animation packet to all nearby players so the animation plays client-side.
+     * This bypasses the client-side check in PokemonEntity.cry() and playAnimation().
+     */
+    private fun sendAnimation(world: World, pokemonEntity: PokemonEntity, vararg animationNames: String) {
+        if (world !is ServerWorld) return
+        val packet = PlayPosableAnimationPacket(
+            pokemonEntity.id,
+            animationNames.toSet(),
+            emptyList()
+        )
+        packet.sendToPlayersAround(
+            pokemonEntity.x, pokemonEntity.y, pokemonEntity.z,
+            64.0,
+            world.registryKey,
+            { true }
+        )
+    }
+
     fun playHarvestEffect(world: World, pokemonEntity: PokemonEntity, jobKey: String) {
         if (!isEnabled(jobKey)) return
         if (world !is ServerWorld) return
 
-        pokemonEntity.cry()
-        pokemonEntity.playAnimation("physical", emptyList())
+        sendAnimation(world, pokemonEntity, "cry", "physical")
 
         val x = pokemonEntity.x
         val y = pokemonEntity.y + pokemonEntity.height * 0.8
@@ -71,8 +86,7 @@ object CobbleworkersJobEffects {
         if (!isEnabled(jobKey)) return
         if (world !is ServerWorld) return
 
-        pokemonEntity.cry()
-        pokemonEntity.playAnimation("special", emptyList())
+        sendAnimation(world, pokemonEntity, "cry", "special")
 
         val x = pokemonEntity.x
         val y = pokemonEntity.y + pokemonEntity.height * 0.8
@@ -85,8 +99,7 @@ object CobbleworkersJobEffects {
         if (!isEnabled("fishing")) return
         if (world !is ServerWorld) return
 
-        pokemonEntity.cry()
-        pokemonEntity.playAnimation("special", emptyList())
+        sendAnimation(world, pokemonEntity, "cry", "special")
 
         if (waterPos != null) {
             val x = waterPos.x + 0.5
@@ -103,8 +116,7 @@ object CobbleworkersJobEffects {
         if (!isEnabled(jobKey)) return
         if (world !is ServerWorld) return
 
-        pokemonEntity.cry()
-        pokemonEntity.playAnimation("special", emptyList())
+        sendAnimation(world, pokemonEntity, "cry", "special")
 
         val x = pokemonEntity.x
         val y = pokemonEntity.y + pokemonEntity.height * 0.5
@@ -117,8 +129,7 @@ object CobbleworkersJobEffects {
         if (!isEnabled("healing")) return
         if (world !is ServerWorld) return
 
-        pokemonEntity.cry()
-        pokemonEntity.playAnimation("special", emptyList())
+        sendAnimation(world, pokemonEntity, "cry", "special")
 
         val x = pokemonEntity.x
         val y = pokemonEntity.y + pokemonEntity.height * 0.8
@@ -131,8 +142,7 @@ object CobbleworkersJobEffects {
         if (!isEnabled(jobKey)) return
         if (world !is ServerWorld) return
 
-        pokemonEntity.cry()
-        pokemonEntity.playAnimation("special", emptyList())
+        sendAnimation(world, pokemonEntity, "cry", "special")
 
         val x = pokemonEntity.x
         val y = pokemonEntity.y + pokemonEntity.height * 0.5
@@ -146,8 +156,7 @@ object CobbleworkersJobEffects {
         if (!isEnabled("extinguisher")) return
         if (world !is ServerWorld) return
 
-        pokemonEntity.cry()
-        pokemonEntity.playAnimation("special", emptyList())
+        sendAnimation(world, pokemonEntity, "cry", "special")
 
         val x = pokemonEntity.x
         val y = pokemonEntity.y + pokemonEntity.height * 0.5
