@@ -206,8 +206,6 @@ object CobbleworkersJobEffects {
         if (world !is ServerWorld) return
 
         sendAnimation(world, pokemonEntity, "cry")
-
-        // Consume one stamina charge on success
         CobbleworkersStamina.useCharge(world, pokemonEntity)
     }
 
@@ -282,11 +280,7 @@ object CobbleworkersJobEffects {
         sendAnimation(world, pokemonEntity, "cry")
         sendAnimation(world, pokemonEntity, "special")
         CobbleworkersStamina.useCharge(world, pokemonEntity)
-
-        val x = pokemonEntity.x
-        val y = pokemonEntity.y + pokemonEntity.height * 0.5
-        val z = pokemonEntity.z
-
+        val x = pokemonEntity.x; val y = pokemonEntity.y + pokemonEntity.height * 0.5; val z = pokemonEntity.z
         world.spawnParticles(ParticleTypes.CLOUD, x, y, z, 8, 0.4, 0.2, 0.4, 0.03)
     }
 }

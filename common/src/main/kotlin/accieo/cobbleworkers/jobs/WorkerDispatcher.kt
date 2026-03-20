@@ -72,7 +72,7 @@ object WorkerDispatcher {
      * Called ONCE per Pokémon in the pasture per tick.
      */
     fun tickPokemon(world: World, pastureOrigin: BlockPos, pokemonEntity: PokemonEntity) {
-        // Check stamina - if resting, skip all jobs
+        // Check stamina - if resting, skip all jobs (Zzz particles handled inside isResting)
         if (CobbleworkersStamina.isResting(world, pokemonEntity)) return
 
         workers

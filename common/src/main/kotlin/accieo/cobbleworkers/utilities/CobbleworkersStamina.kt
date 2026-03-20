@@ -8,8 +8,15 @@
 
 package accieo.cobbleworkers.utilities
 
+import org.apache.logging.log4j.LogManager
 import accieo.cobbleworkers.config.CobbleworkersConfigHolder
+import com.cobblemon.mod.common.CobblemonActivities
+import com.cobblemon.mod.common.CobblemonMemories
+import com.cobblemon.mod.common.api.pokemon.status.Statuses
+import com.cobblemon.mod.common.entity.PoseType
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import com.cobblemon.mod.common.pokemon.status.PersistentStatusContainer
+import net.minecraft.entity.ai.brain.MemoryModuleType
 import net.minecraft.particle.ParticleTypes
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.world.World
@@ -21,17 +28,17 @@ import java.util.UUID
  * While resting, the Pokémon enters sleep pose and shows Zzz particles.
  */
 object CobbleworkersStamina {
-
+    private val LOG = LogManager.getLogger("CW-Stamina")
     private val config get() = CobbleworkersConfigHolder.config.general
     private val maxCharges get() = config.staminaCharges
     private val restTicks get() = config.restDurationSeconds * 20L
 
-    // Current charges per Pokemon (starts at max)
     private val charges = mutableMapOf<UUID, Int>()
-    // Tick when rest started (null = not resting)
     private val restStartTick = mutableMapOf<UUID, Long>()
-    // Track if we already set sleep pose
     private val isSleeping = mutableSetOf<UUID>()
+    // Tick when exhaustion started (before actually sleeping)
+    private val exhaustedSinceTick = mutableMapOf<UUID, Long>()
+    private val EXHAUSTION_DELAY_TICKS = 100L // 5 seconds before falling asleep
 
     /**
      * Check if stamina system is enabled.
@@ -42,7 +49,13 @@ object CobbleworkersStamina {
      * Get current charges for a Pokemon. Returns max if not tracked yet.
      */
     fun getCharges(pokemonId: UUID): Int {
-        return charges.getOrPut(pokemonId) { maxCharges }
+        val current = charges.getOrPut(pokemonId) { maxCharges }
+        // If config changed to lower max, cap current charges
+        if (current > maxCharges) {
+            charges[pokemonId] = maxCharges
+            return maxCharges
+        }
+        return current
     }
 
     /**
@@ -54,8 +67,22 @@ object CobbleworkersStamina {
         if (!isEnabled()) return false
 
         val pokemonId = pokemonEntity.pokemon.uuid
-        val startTick = restStartTick[pokemonId] ?: return false
         val now = world.time
+
+        // Check exhaustion delay - still working but about to sleep
+        val exhaustedTick = exhaustedSinceTick[pokemonId]
+        if (exhaustedTick != null) {
+            if (now - exhaustedTick >= EXHAUSTION_DELAY_TICKS) {
+                // Delay is over, actually start sleeping
+                exhaustedSinceTick.remove(pokemonId)
+                startRest(world, pokemonEntity)
+            } else {
+                // Still in delay - let the Pokemon finish depositing etc.
+                return false
+            }
+        }
+
+        val startTick = restStartTick[pokemonId] ?: return false
         val elapsed = now - startTick
 
         if (elapsed >= restTicks) {
@@ -64,25 +91,10 @@ object CobbleworkersStamina {
             return false
         }
 
-        // Still resting - show Zzz particles every 30 ticks (~1.5 sec)
-        if (world is ServerWorld && now % 30 == 0L) {
-            val x = pokemonEntity.x
-            val y = pokemonEntity.y + pokemonEntity.height + 0.3
-            val z = pokemonEntity.z
-
-            // Zzz note particles floating upward
-            world.spawnParticles(
-                ParticleTypes.NOTE,
-                x, y, z,
-                1, 0.1, 0.2, 0.1, 0.0
-            )
-
-            // Snoring smoke puffs
-            world.spawnParticles(
-                ParticleTypes.CLOUD,
-                x, y - 0.2, z,
-                2, 0.15, 0.05, 0.15, 0.005
-            )
+        // Keep Pokemon still and sleeping
+        pokemonEntity.navigation.stop()
+        if (pokemonEntity.dataTracker.get(PokemonEntity.POSE_TYPE) != PoseType.SLEEP) {
+            pokemonEntity.dataTracker.set(PokemonEntity.POSE_TYPE, PoseType.SLEEP)
         }
 
         return true
@@ -96,13 +108,14 @@ object CobbleworkersStamina {
         if (!isEnabled()) return
 
         val pokemonId = pokemonEntity.pokemon.uuid
-        val current = charges.getOrPut(pokemonId) { maxCharges }
+        val current = getCharges(pokemonId)
         val remaining = (current - 1).coerceAtLeast(0)
         charges[pokemonId] = remaining
+        LOG.info("[STAMINA] useCharge: ${pokemonEntity.pokemon.species.name} charges=$current->$remaining")
 
-        if (remaining <= 0) {
-            // Start resting
-            startRest(world, pokemonEntity)
+        if (remaining <= 0 && !isSleeping.contains(pokemonId) && !exhaustedSinceTick.containsKey(pokemonId)) {
+            LOG.info("[STAMINA] ${pokemonEntity.pokemon.species.name} exhausted, will sleep in 5 seconds")
+            exhaustedSinceTick[pokemonId] = world.time
         }
     }
 
@@ -114,19 +127,16 @@ object CobbleworkersStamina {
         restStartTick[pokemonId] = world.time
         isSleeping.add(pokemonId)
 
-        // Stop navigation
+        // Full Cobblemon sleep: Brain Activity + PoseType + Status
         pokemonEntity.navigation.stop()
-
-        // Send sleep animation
-        if (world is ServerWorld) {
-            CobbleworkersJobEffects.sendAnimationPublic(world, pokemonEntity, "sleep")
-
-            // Initial Zzz burst
-            val x = pokemonEntity.x
-            val y = pokemonEntity.y + pokemonEntity.height + 0.3
-            val z = pokemonEntity.z
-            world.spawnParticles(ParticleTypes.CLOUD, x, y, z, 5, 0.3, 0.2, 0.3, 0.01)
-        }
+        pokemonEntity.enablePoseTypeRecalculation = false
+        pokemonEntity.dataTracker.set(PokemonEntity.POSE_TYPE, PoseType.SLEEP)
+        try {
+            pokemonEntity.brain.doExclusively(CobblemonActivities.POKEMON_SLEEPING_ACTIVITY)
+            pokemonEntity.brain.remember(CobblemonMemories.POKEMON_SLEEPING, true)
+        } catch (_: Exception) { }
+        pokemonEntity.pokemon.status = PersistentStatusContainer(Statuses.SLEEP)
+        LOG.info("[STAMINA] startRest: ${pokemonEntity.pokemon.species.name} pose=${pokemonEntity.dataTracker.get(PokemonEntity.POSE_TYPE)} brain-activity=sleeping")
     }
 
     /**
@@ -137,6 +147,15 @@ object CobbleworkersStamina {
         charges[pokemonId] = maxCharges
         restStartTick.remove(pokemonId)
         isSleeping.remove(pokemonId)
+
+        // Wake up - restore everything
+        pokemonEntity.pokemon.status = null
+        pokemonEntity.enablePoseTypeRecalculation = true
+        pokemonEntity.dataTracker.set(PokemonEntity.POSE_TYPE, PoseType.STAND)
+        try {
+            pokemonEntity.brain.forget(CobblemonMemories.POKEMON_SLEEPING)
+            pokemonEntity.brain.resetPossibleActivities()
+        } catch (_: Exception) { }
 
         // Wake-up effects
         if (world is ServerWorld) {
@@ -156,5 +175,6 @@ object CobbleworkersStamina {
         charges.remove(pokemonId)
         restStartTick.remove(pokemonId)
         isSleeping.remove(pokemonId)
+        exhaustedSinceTick.remove(pokemonId)
     }
 }

@@ -15,6 +15,7 @@ import accieo.cobbleworkers.interfaces.Worker
 import accieo.cobbleworkers.utilities.CobbleworkersInventoryUtils
 import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
+import accieo.cobbleworkers.utilities.CobbleworkersStamina
 import accieo.cobbleworkers.utilities.CobbleworkersTypeUtils
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import net.minecraft.block.Blocks
@@ -95,10 +96,7 @@ object FishingLootGenerator : Worker {
             // Has items - wait for success pause, then go deposit
             val catchTime = successTime[pokemonId]
             if (catchTime != null && now - catchTime < SUCCESS_PAUSE_TICKS) {
-                // Still in success pause - play cry 20 ticks after the attack animation
-                if (now - catchTime == 20L) {
-                    CobbleworkersJobEffects.playSuccessCry(world, pokemonEntity, "fishing")
-                }
+                // Still in success pause after catch
                 return
             }
             successTime.remove(pokemonId)
@@ -131,9 +129,9 @@ object FishingLootGenerator : Worker {
             lastGenerationTime[pokemonId] = now
             heldItemsByPokemon[pokemonId] = drops
             successTime[pokemonId] = now
-            // Attack animation immediately on catch
+            // Attack animation + cry on catch
             CobbleworkersJobEffects.playWorkStartEffect(world, pokemonEntity, "fishing")
-            // Cry comes 1 second later (handled in tick)
+            CobbleworkersJobEffects.playSuccessCry(world, pokemonEntity, "fishing")
         }
     }
 

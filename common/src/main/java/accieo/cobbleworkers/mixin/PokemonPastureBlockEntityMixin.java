@@ -11,6 +11,7 @@ package accieo.cobbleworkers.mixin;
 import accieo.cobbleworkers.Cobbleworkers;
 import accieo.cobbleworkers.cache.CobbleworkersCacheManager;
 import accieo.cobbleworkers.jobs.WorkerDispatcher;
+import accieo.cobbleworkers.utilities.CobbleworkersStamina;
 import com.cobblemon.mod.common.block.entity.PokemonPastureBlockEntity;
 import com.cobblemon.mod.common.entity.PoseType;
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity;
@@ -53,6 +54,9 @@ public class PokemonPastureBlockEntityMixin {
 
             PokemonEntity pokemonEntity = pokemon.getEntity();
             if (pokemonEntity == null) continue;
+
+            // Check if Pokemon is resting due to stamina - tick the rest timer but skip jobs
+            if (CobbleworkersStamina.INSTANCE.isResting(world, pokemonEntity)) continue;
 
             PoseType poseType = pokemonEntity.getDataTracker().get(PokemonEntity.getPOSE_TYPE());
             if (poseType == PoseType.SLEEP) continue;

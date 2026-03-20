@@ -95,7 +95,7 @@ class CobbleworkersConfig : ConfigData {
         @ConfigEntry.BoundedDiscrete(min = 1, max = 8)
         var searchHeight = 5
         var globalJobEffectsEnabled = true
-        var staminaEnabled = true
+        var staminaEnabled = false
         @ConfigEntry.BoundedDiscrete(min = 1, max = 50)
         var staminaCharges = 10
         var restDurationSeconds: Long = 60
