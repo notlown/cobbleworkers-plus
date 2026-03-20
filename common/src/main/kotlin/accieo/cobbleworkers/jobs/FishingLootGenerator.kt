@@ -38,13 +38,11 @@ object FishingLootGenerator : Worker {
     private val lastGenerationTime = mutableMapOf<UUID, Long>()
     private val heldItemsByPokemon = mutableMapOf<UUID, List<ItemStack>>()
     private val failedDepositLocations = mutableMapOf<UUID, MutableSet<BlockPos>>()
+    private val successTime = mutableMapOf<UUID, Long>()
+    private val SUCCESS_PAUSE_TICKS = 40L // 2 seconds pause after catch before going to chest
 
     override val jobType: JobType = JobType.FishingLootGenerator
 
-    /**
-     * Block validator: finds water blocks so the scanner caches their positions.
-     * Pokemon will navigate to these cached water blocks to fish.
-     */
     override val blockValidator: ((World, BlockPos) -> Boolean) = { world, pos ->
         world.getBlockState(pos).block == Blocks.WATER
     }
@@ -54,9 +52,6 @@ object FishingLootGenerator : Worker {
         return CobbleworkersTypeUtils.isAllowedByType(config.typeGeneratesFishingLoot, pokemonEntity) || isDesignatedGenerator(pokemonEntity)
     }
 
-    /**
-     * Checks if a Pokemon is touching water or standing directly next to a water block (1 block radius).
-     */
     private fun isNearWater(world: World, pokemonEntity: PokemonEntity): Boolean {
         if (pokemonEntity.isTouchingWater) return true
         val pos = pokemonEntity.blockPos
@@ -65,25 +60,10 @@ object FishingLootGenerator : Worker {
         }
     }
 
-    /**
-     * Finds the closest water block near the Pokemon and returns it.
-     */
-    private fun findNearbyWaterBlock(world: World, pokemonEntity: PokemonEntity): BlockPos? {
-        val pos = pokemonEntity.blockPos
-        return BlockPos.iterate(pos.add(-2, -2, -2), pos.add(2, 2, 2)).firstOrNull { checkPos ->
-            world.getBlockState(checkPos).block == Blocks.WATER
-        }?.toImmutable()
-    }
-
-    /**
-     * Finds the closest cached water block for this pasture and navigates the Pokemon to it.
-     */
     private fun navigateToWater(world: World, origin: BlockPos, pokemonEntity: PokemonEntity): Boolean {
         val waterTargets = CobbleworkersCacheManager.getTargets(origin, jobType)
         if (waterTargets.isEmpty()) return false
-
         val closest = waterTargets.minByOrNull { it.getSquaredDistance(pokemonEntity.blockPos) } ?: return false
-
         CobbleworkersNavigationUtils.navigateTo(pokemonEntity, closest.up())
         return true
     }
@@ -91,19 +71,37 @@ object FishingLootGenerator : Worker {
     override fun tick(world: World, origin: BlockPos, pokemonEntity: PokemonEntity) {
         val pokemonId = pokemonEntity.pokemon.uuid
         val heldItems = heldItemsByPokemon[pokemonId]
+        val now = world.time
 
         if (heldItems.isNullOrEmpty()) {
-            // No items held - go fish
             if (isNearWater(world, pokemonEntity)) {
-                // At the water - generate loot
                 failedDepositLocations.remove(pokemonId)
+
+                val lastTime = lastGenerationTime[pokemonId] ?: 0L
+                if (now - lastTime < cooldownTicks) {
+                    // Working - show particles every second as "busy" indicator
+                    if (now % 20 == 0L) {
+                        CobbleworkersJobEffects.playWorkingParticles(world, pokemonEntity, "fishing")
+                    }
+                    return
+                }
+
+                // Cooldown done - generate loot
                 handleGeneration(world, origin, pokemonEntity)
             } else {
-                // Not near water - navigate to water
                 navigateToWater(world, origin, pokemonEntity)
             }
         } else {
-            // Has items - go deposit
+            // Has items - wait for success pause, then go deposit
+            val catchTime = successTime[pokemonId]
+            if (catchTime != null && now - catchTime < SUCCESS_PAUSE_TICKS) {
+                // Still in success pause - play cry 20 ticks after the attack animation
+                if (now - catchTime == 20L) {
+                    CobbleworkersJobEffects.playSuccessCry(world, pokemonEntity, "fishing")
+                }
+                return
+            }
+            successTime.remove(pokemonId)
             CobbleworkersInventoryUtils.handleDepositing(world, origin, pokemonEntity, heldItems, failedDepositLocations, heldItemsByPokemon)
         }
     }
@@ -111,11 +109,6 @@ object FishingLootGenerator : Worker {
     fun handleGeneration(world: World, origin: BlockPos, pokemonEntity: PokemonEntity) {
         val pokemonId = pokemonEntity.pokemon.uuid
         val now = world.time
-        val lastTime = lastGenerationTime[pokemonId] ?: 0L
-
-        if (now - lastTime < cooldownTicks) {
-            return
-        }
 
         val treasureChancePercentage = treasureChance.toDouble() / 100
         val useTreasureTable = world.random.nextFloat() < treasureChancePercentage
@@ -137,7 +130,10 @@ object FishingLootGenerator : Worker {
         if (drops.isNotEmpty()) {
             lastGenerationTime[pokemonId] = now
             heldItemsByPokemon[pokemonId] = drops
-            CobbleworkersJobEffects.playFishingEffect(world, pokemonEntity, findNearbyWaterBlock(world, pokemonEntity))
+            successTime[pokemonId] = now
+            // Attack animation immediately on catch
+            CobbleworkersJobEffects.playWorkStartEffect(world, pokemonEntity, "fishing")
+            // Cry comes 1 second later (handled in tick)
         }
     }
 

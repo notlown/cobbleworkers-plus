@@ -13,16 +13,20 @@ This fork focuses on improving existing job mechanics, fixing bugs, and adding q
 ## ✨ What's Different from the Original?
 
 ### 🎣 Fishing Job - Complete Overhaul
-- **No more water-standing requirement** — Pokémon no longer need to be submerged in water. Standing next to water is enough.
-- **Active water navigation** — Pokémon actively walk to nearby water blocks to fish, then return to a chest to deposit loot. Uses the configurable `searchRadius` (default: 10 blocks).
-- **Loot generation fix** — Fixed an issue where the fishing loot table returned empty results because the origin position was set to the Pasture Block instead of the Pokémon's position near water.
-- **Catch effects** — Pokémon now play their cry and spawn splash/fishing/bubble particles on a successful catch.
+- **No more water-standing requirement** — Standing next to water is enough, no submersion needed
+- **Active water navigation** — Pokémon walk to water on their own, fish, then return to deposit loot
+- **Loot generation fix** — Fixed empty fishing drops caused by wrong origin position
+- **3-phase effects** — Working particles while fishing, attack animation + particle burst on catch, cry on success
 
-### 🎬 Job Effects System — All 22 Jobs
-- **Attack animations** — Pokémon play `physical` (harvest jobs) or `special` (generation jobs) attack animations on success
-- **Themed particles** — Each job type has unique particles: splash for fishing, flames for fire, hearts for healing, clouds for extinguishing, etc.
+### 📦 Smarter Chest System
+- **Distance-based chest selection** — Each Pokémon goes to its nearest free chest instead of all targeting the same one
+- **No more unnecessary item drops** — Retries all chests when they're full instead of dropping items on the ground
+
+### 🎬 Job Effects — All 22 Jobs
+- **Attack animations** — Uses Cobblemon's animation fallback chains (e.g. `watergun → bubble → spray → special`) so every Pokémon plays a fitting animation
+- **Themed particles** — Splash for fishing, flames for fire, hearts for healing, green sparkles for harvesting, clouds for extinguishing
 - **Pokémon cry** on every successful action
-- **Per-job toggles** — Enable/disable effects for each job individually via config, plus a global master toggle
+- **Per-job toggles** — Enable/disable effects individually or globally via config
 
 > See the full [CHANGELOG.md](CHANGELOG.md) for all technical details.
 

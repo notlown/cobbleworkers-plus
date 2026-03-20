@@ -142,7 +142,9 @@ object ApricornHarvester : Worker {
         }
 
         world.setBlockState(apricornPos, apricornState.with(ApricornBlock.AGE, 0), Block.NOTIFY_ALL)
-        CobbleworkersJobEffects.playHarvestEffect(world, pokemonEntity, "apricorn")
+        // Attack animation + particles on harvest, then cry
+        CobbleworkersJobEffects.playWorkStartEffect(world, pokemonEntity, "apricorn")
+        CobbleworkersJobEffects.playSuccessCry(world, pokemonEntity, "apricorn")
     }
 
     /**

@@ -56,15 +56,17 @@ object CobbleworkersInventoryUtils {
     /**
      * Finds closest inventory
      */
-    fun findClosestInventory(world: World, origin: BlockPos, ignorePos: Set<BlockPos> = emptySet()): BlockPos? {
+    fun findClosestInventory(world: World, origin: BlockPos, ignorePos: Set<BlockPos> = emptySet(), pokemonPos: BlockPos? = null): BlockPos? {
         val possibleTargets = CobbleworkersCacheManager.getTargets(origin, JobType.Generic)
         if (possibleTargets.isEmpty()) return null
 
+        // Sort by distance to the Pokemon (not the pasture) so each Mon goes to its nearest chest
+        val sortOrigin = pokemonPos ?: origin
         return possibleTargets
             .filter { pos ->
                 blockValidator(world, pos) && pos !in ignorePos
             }
-            .minByOrNull { it.getSquaredDistance(origin) }
+            .minByOrNull { it.getSquaredDistance(sortOrigin) }
     }
 
     /**
@@ -184,7 +186,7 @@ object CobbleworkersInventoryUtils {
     ) {
         val pokemonId = pokemonEntity.pokemon.uuid
         val triedPositions = failedDepositLocations.getOrPut(pokemonId) { mutableSetOf() }
-        val inventoryPos = findClosestInventory(world, origin, triedPositions)
+        val inventoryPos = findClosestInventory(world, origin, triedPositions, pokemonEntity.blockPos)
 
         if (inventoryPos == null) {
             // Don't drop items yet if scan is running as inventory might be found within the next ticks.
@@ -193,7 +195,14 @@ object CobbleworkersInventoryUtils {
                 return
             }
 
-            // No (untried) inventories found, so we just drop the remaining items and reset.
+            // All chests tried - clear tried list and retry before dropping
+            if (triedPositions.isNotEmpty()) {
+                triedPositions.clear()
+                heldItemsByPokemon[pokemonId] = itemsToDeposit
+                return
+            }
+
+            // Truly no inventories found - drop as last resort
             itemsToDeposit.forEach { stack -> Block.dropStack(world, pokemonEntity.blockPos, stack) }
             heldItemsByPokemon.remove(pokemonId)
             failedDepositLocations.remove(pokemonId)

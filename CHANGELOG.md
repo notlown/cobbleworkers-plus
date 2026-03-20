@@ -14,49 +14,58 @@ All changes compared to the original [Cobbleworkers](https://github.com/Accieo/c
 #### Fixed
 - **Config labels** — All config options now show clean, readable names instead of raw translation keys
 - **Category names** — Renamed categories to be cleaner: "Fishing" instead of "Fishing loot", "Pick-up" instead of "Pick-up loot", "Furnace Fuel" instead of "Fuel generation", etc.
-- **Effect toggles moved into jobs** — Each job category now has its own "Effects (cry, animation, particles)" toggle instead of a separate effects section. Global toggle remains in General settings
-- **Animations and cry now work server-side** — Fixed `cry()` and `playAnimation()` which only worked client-side. Now uses `PlayPosableAnimationPacket` to send animation packets directly to nearby players from the server
-- **Pokemon lists renamed** — All per-job Pokémon lists now consistently named "Additional Pokémon (exceptions)" and moved to the bottom of each category
+- **Effect toggles in each job** — Each job category has its own "Effects (cry, animation, particles)" toggle. Global master toggle in General settings
+- **Pokemon lists renamed** — All per-job Pokémon lists consistently named "Additional Pokémon (exceptions)" and moved to the bottom of each category
 
 ### 🎣 Fishing Job - Major Overhaul
 
 #### Fixed
-- **Fishing now works on platforms near water** — Original mod required Pokémon to be submerged in water (`isTouchingWater`). Pokémon can now fish while standing next to water blocks (1-block radius detection).
-- **Loot table origin fix** — Changed the loot context `ORIGIN` parameter from the Pasture Block position to the Pokémon's actual position. This fixes the issue where the Minecraft fishing loot table returned empty drops because the origin was on land instead of near water.
+- **Fishing now works on platforms near water** — Original mod required Pokémon to be submerged (`isTouchingWater`). Now works standing next to water (1-block radius)
+- **Loot table origin fix** — Changed `ORIGIN` from Pasture Block to Pokémon position, fixing empty fishing drops
 
 #### Added
-- **Active water navigation** — Pokémon now actively search for and walk to nearby water blocks using the block scanner cache, instead of passively waiting to be placed next to water. Uses the configurable `searchRadius` (default: 10 blocks) to find water.
-- **Water block validator** — Added a `blockValidator` to the FishingLootGenerator so the `DeferredBlockScanner` caches water block positions. Pokémon navigate to these cached positions to fish.
-- **Catch effects** — When a Pokémon successfully catches something:
-  - Pokémon plays its `cry()` animation
-  - Water splash particles (`SPLASH`) spawn at the nearest water block
-  - Fishing wake particles (`FISHING`) appear on the water surface
-  - Bubble particles (`BUBBLE`) rise from underwater
+- **Active water navigation** — Pokémon walk to water blocks on their own using the block scanner cache and configurable `searchRadius`
+- **Water block validator** — `DeferredBlockScanner` now caches water positions for fishing navigation
+- **3-phase fishing effects:**
+  1. Working particles (fishing + bubbles) every second while waiting for cooldown
+  2. Attack animation (watergun/bubble/spray/special fallback) + particle burst on catch
+  3. Cry 1 second after catch, then 2-second pause before walking to chest
 
-### 🎬 Job Effects System - All Jobs
+### 📦 Chest/Inventory System - Bug Fixes
+
+#### Fixed
+- **Chests now sorted by distance to Pokémon** — Original sorted by distance to Pasture Block, causing all Pokémon to target the same nearest chest. Now each Pokémon goes to its own nearest free chest
+- **No more unnecessary item drops** — When all nearby chests are full, the mod now clears the "tried" list and retries instead of immediately dropping items on the ground. Items only drop as absolute last resort when zero chests exist
+
+### 🎬 Job Effects System - All 22 Jobs
 
 #### Added
-- **New `CobbleworkersJobEffects` utility** — Centralized effect system for all 22 jobs
-- **Attack animations on success:**
-  - Harvest jobs (Apricorn, Berry, Crop, Mint, Amethyst, Tumblestone, Netherwart, Honey, Irrigation, Ground Items): `physical` attack animation + green sparkle particles
-  - Generation jobs (Archeology, Diving, Pick-up, Scouts): `special` attack animation + green sparkle particles
-  - Fishing: `special` attack animation + water splash/fishing/bubble particles
-  - Fire jobs (Lava, Fuel, Brewing Stand Fuel): `special` attack animation + flame particles
-  - Water/Snow generation: `special` attack animation + splash/drip particles
-  - Healing: `special` attack animation + heart particles
-  - Fire Extinguisher: `special` attack animation + cloud particles
-- **Per-job config toggles** — New `jobEffects` config group with:
-  - `globalEffectsEnabled` — Master toggle for all effects
-  - Individual toggle per job (e.g. `fishingEffects`, `healingEffects`, etc.)
-- **Pokémon cry** plays on every successful job action (respects toggle)
+- **`CobbleworkersJobEffects` utility** — Centralized 3-phase effect system:
+  - **Phase 1 (Success):** Attack animation using Cobblemon's fallback chain system (e.g. `watergun → bubble → spray → beam → special` for water jobs, `tackle → scratch → pound → physical` for harvest jobs) + themed particle burst
+  - **Phase 2 (Working):** Periodic particles while on cooldown as "busy" indicator
+  - **Phase 3 (Complete):** Cry sound on successful action
+- **Server-side animation packets** — Uses `PlayPosableAnimationPacket` via `CobblemonNetwork` (same as battle system) to send animations from server to clients. Bypasses the client-only check in `cry()` and `playAnimation()`
+- **Themed particles per job type:**
+  - Fishing: splash + fishing wake + bubble pop
+  - Fire jobs: flame + lava + smoke
+  - Water/Snow: splash + dripping water
+  - Healing: hearts + happy villager
+  - Harvest: happy villager + composter
+  - Extinguisher: cloud
+- **Per-job config toggles** — `effectsEnabled` in each job category + `globalJobEffectsEnabled` master toggle
+- **Animation fallback chains** — Only ~8% of Pokémon have battle animations. System sends multiple animation names; Pokémon plays the first one it has. Cry works for ~81% of Pokémon. Particles work for all
 
 ### 📝 Files Changed
 
 | File | Change |
 |------|--------|
-| `FishingLootGenerator.kt` | Complete overhaul: near-water detection, active water navigation, loot origin fix, catch effects |
-| `CobbleworkersJobEffects.kt` | New file: centralized effect system with per-job themed effects |
-| `CobbleworkersConfig.kt` | Added `JobEffectsGroup` with global + per-job effect toggles |
-| All 22 job files | Added effect calls on successful job completion |
+| `FishingLootGenerator.kt` | Complete overhaul: near-water detection, active navigation, 3-phase effects, loot origin fix |
+| `CobbleworkersJobEffects.kt` | New: centralized effect system with fallback animations, themed particles, server-side packets |
+| `CobbleworkersInventoryUtils.kt` | Fixed chest sorting (by Pokemon distance), retry logic instead of dropping items |
+| `CobbleworkersConfig.kt` | Added `effectsEnabled` per job, `globalJobEffectsEnabled`, reordered fields |
+| `ApricornHarvester.kt` | Migrated to 3-phase effect system (attack + cry on harvest) |
+| All other 20 job files | Added legacy effect calls on success |
+| `en_us.json` | Complete rewrite: clean labels, consistent naming, all new config entries |
+| `fabric.mod.json` | Renamed to Cobbleworkers Plus, updated metadata |
 | `README.md` | Full fork documentation |
 | `CHANGELOG.md` | All changes vs. original |
