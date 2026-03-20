@@ -13,6 +13,7 @@ import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
 import accieo.cobbleworkers.utilities.CobbleworkersInventoryUtils
+import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
 import accieo.cobbleworkers.utilities.CobbleworkersTypeUtils
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
@@ -172,6 +173,7 @@ object HoneyCollector : Worker {
         val beehiveState = world.getBlockState(beehivePos)
         heldItemsByPokemon[pokemonId] = listOf(ItemStack(Items.HONEYCOMB, 3))
         world.setBlockState(beehivePos, beehiveState.with(BeehiveBlock.HONEY_LEVEL, 0), Block.NOTIFY_ALL)
+        CobbleworkersJobEffects.playHarvestEffect(world, pokemonEntity, "honey")
     }
 
     /**

@@ -93,6 +93,35 @@ class CobbleworkersConfig : ConfigData {
         var searchHeight = 5
     }
 
+    @ConfigEntry.Gui.CollapsibleObject
+    var jobEffects = JobEffectsGroup()
+
+    class JobEffectsGroup {
+        var globalEffectsEnabled = true
+        var apricornEffects = true
+        var irrigationEffects = true
+        var amethystEffects = true
+        var tumblestoneEffects = true
+        var cropHarvestEffects = true
+        var berriesEffects = true
+        var honeyEffects = true
+        var mintsEffects = true
+        var lavaEffects = true
+        var waterEffects = true
+        var snowEffects = true
+        var fishingEffects = true
+        var pickupEffects = true
+        var divingEffects = true
+        var groundItemEffects = true
+        var netherwartEffects = true
+        var healingEffects = true
+        var fuelEffects = true
+        var brewingStandFuelEffects = true
+        var extinguisherEffects = true
+        var archeologyEffects = true
+        var scoutsEffects = true
+    }
+
     class ApricornGroup {
         var apricornHarvestersEnabled = true
         var apricornHarvesters: MutableList<String> = mutableListOf("ditto")

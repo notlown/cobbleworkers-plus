@@ -13,6 +13,7 @@ import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
 import accieo.cobbleworkers.utilities.CobbleworkersCropUtils
 import accieo.cobbleworkers.utilities.CobbleworkersInventoryUtils
+import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
 import accieo.cobbleworkers.utilities.CobbleworkersTypeUtils
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
@@ -87,6 +88,7 @@ object CropHarvester : Worker {
 
         if (CobbleworkersNavigationUtils.isPokemonAtPosition(pokemonEntity, currentTarget)) {
             CobbleworkersCropUtils.harvestCrop(world, closestCrop, pokemonEntity, heldItemsByPokemon, config)
+            CobbleworkersJobEffects.playHarvestEffect(world, pokemonEntity, "cropHarvest")
             CobbleworkersNavigationUtils.releaseTarget(pokemonId, world)
         }
     }

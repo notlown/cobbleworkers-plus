@@ -12,6 +12,7 @@ import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
 import accieo.cobbleworkers.utilities.CobbleworkersCropUtils
+import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
 import accieo.cobbleworkers.utilities.CobbleworkersTypeUtils
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
@@ -66,6 +67,7 @@ object CropIrrigator : Worker {
 
         if (CobbleworkersNavigationUtils.isPokemonAtPosition(pokemonEntity, currentTarget, 1.5)) {
             irrigateFarmland(world, currentTarget, config.irrigationRadius)
+            CobbleworkersJobEffects.playHarvestEffect(world, pokemonEntity, "irrigation")
             CobbleworkersNavigationUtils.releaseTarget(pokemonId, world)
         }
     }

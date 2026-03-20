@@ -13,6 +13,7 @@ import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
 import accieo.cobbleworkers.utilities.CobbleworkersInventoryUtils
+import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
 import accieo.cobbleworkers.utilities.CobbleworkersTypeUtils
 import com.cobblemon.mod.common.block.BerryBlock
@@ -131,6 +132,7 @@ object BerryHarvester : Worker {
         }
 
         world.setBlockState(berryPos, berryState.with(BerryBlock.AGE, BerryBlock.MATURE_AGE), Block.NOTIFY_ALL)
+        CobbleworkersJobEffects.playHarvestEffect(world, pokemonEntity, "berries")
     }
 
     /**

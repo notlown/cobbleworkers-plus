@@ -13,6 +13,7 @@ import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
 import accieo.cobbleworkers.mixin.AbstractFurnaceBlockEntityAccessor
+import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
 import accieo.cobbleworkers.utilities.CobbleworkersTypeUtils
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
@@ -101,6 +102,7 @@ object FuelGenerator : Worker {
 
         if (CobbleworkersNavigationUtils.isPokemonAtPosition(pokemonEntity, closestFurnace)) {
             addBurnTime(world, closestFurnace)
+            CobbleworkersJobEffects.playFireEffect(world, pokemonEntity, "fuel")
             lastGenerationTime[pokemonId] = now
             CobbleworkersNavigationUtils.releaseTarget(pokemonId, world)
         }

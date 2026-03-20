@@ -13,6 +13,7 @@ import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
 import accieo.cobbleworkers.utilities.CobbleworkersInventoryUtils
+import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
 import accieo.cobbleworkers.utilities.CobbleworkersTypeUtils
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
@@ -23,7 +24,6 @@ import net.minecraft.loot.LootTables
 import net.minecraft.loot.context.LootContextParameterSet
 import net.minecraft.loot.context.LootContextParameters
 import net.minecraft.loot.context.LootContextTypes
-import net.minecraft.particle.ParticleTypes
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
@@ -88,55 +88,6 @@ object FishingLootGenerator : Worker {
         return true
     }
 
-    /**
-     * Plays a fishing catch effect: Pokemon cries and water splash particles appear.
-     */
-    private fun playCatchEffect(world: World, pokemonEntity: PokemonEntity) {
-        // Pokemon cry on successful catch
-        pokemonEntity.cry()
-
-        // Spawn water splash particles at the nearest water block
-        val waterPos = findNearbyWaterBlock(world, pokemonEntity)
-        if (waterPos != null && world is ServerWorld) {
-            val x = waterPos.x + 0.5
-            val y = waterPos.y + 1.0
-            val z = waterPos.z + 0.5
-
-            // Splash particles
-            world.spawnParticles(
-                ParticleTypes.SPLASH,
-                x, y, z,
-                8,    // count
-                0.3,  // deltaX
-                0.1,  // deltaY
-                0.3,  // deltaZ
-                0.05  // speed
-            )
-
-            // Fishing wake particles
-            world.spawnParticles(
-                ParticleTypes.FISHING,
-                x, y, z,
-                4,
-                0.2,
-                0.0,
-                0.2,
-                0.01
-            )
-
-            // Bubble particles underwater
-            world.spawnParticles(
-                ParticleTypes.BUBBLE,
-                x, y - 0.3, z,
-                6,
-                0.2,
-                0.1,
-                0.2,
-                0.05
-            )
-        }
-    }
-
     override fun tick(world: World, origin: BlockPos, pokemonEntity: PokemonEntity) {
         val pokemonId = pokemonEntity.pokemon.uuid
         val heldItems = heldItemsByPokemon[pokemonId]
@@ -186,7 +137,7 @@ object FishingLootGenerator : Worker {
         if (drops.isNotEmpty()) {
             lastGenerationTime[pokemonId] = now
             heldItemsByPokemon[pokemonId] = drops
-            playCatchEffect(world, pokemonEntity)
+            CobbleworkersJobEffects.playFishingEffect(world, pokemonEntity, findNearbyWaterBlock(world, pokemonEntity))
         }
     }
 

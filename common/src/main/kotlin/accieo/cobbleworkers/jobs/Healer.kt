@@ -11,6 +11,7 @@ package accieo.cobbleworkers.jobs
 import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
+import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
 import com.cobblemon.mod.common.api.pokemon.PokemonSpecies
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
@@ -103,6 +104,7 @@ object Healer : Worker {
                         config.regenAmplifier
                     )
                 )
+                CobbleworkersJobEffects.playHealEffect(world, pokemonEntity)
             }
             CobbleworkersNavigationUtils.releasePlayerTarget(pokemonId)
         }

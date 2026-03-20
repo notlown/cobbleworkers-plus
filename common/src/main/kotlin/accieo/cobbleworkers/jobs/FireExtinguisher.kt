@@ -13,6 +13,7 @@ import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
 import net.minecraft.block.Blocks
+import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
 import accieo.cobbleworkers.utilities.CobbleworkersTypeUtils
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
@@ -68,6 +69,7 @@ object FireExtinguisher : Worker {
 
         if (CobbleworkersNavigationUtils.isPokemonAtPosition(pokemonEntity, currentTarget)) {
             extinguishFire(world, currentTarget, config.extinguishingRadius)
+            CobbleworkersJobEffects.playExtinguishEffect(world, pokemonEntity)
             CobbleworkersNavigationUtils.releaseTarget(pokemonId, world)
         }
     }

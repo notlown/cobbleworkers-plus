@@ -12,6 +12,7 @@ import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
 import accieo.cobbleworkers.utilities.CobbleworkersCauldronUtils
+import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
 import accieo.cobbleworkers.utilities.CobbleworkersTypeUtils
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
@@ -78,6 +79,7 @@ object LavaGenerator : Worker {
 
         if (CobbleworkersNavigationUtils.isPokemonAtPosition(pokemonEntity, currentTarget)) {
             CobbleworkersCauldronUtils.addFluid(world, closestCauldron, CobbleworkersCauldronUtils.CauldronFluid.LAVA)
+            CobbleworkersJobEffects.playFireEffect(world, pokemonEntity, "lava")
             lastGenerationTime[pokemonId] = now
             CobbleworkersNavigationUtils.releaseTarget(pokemonId, world)
         }

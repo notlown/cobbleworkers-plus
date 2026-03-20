@@ -13,6 +13,7 @@ import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
 import accieo.cobbleworkers.utilities.CobbleworkersInventoryUtils
+import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
 import accieo.cobbleworkers.utilities.CobbleworkersTypeUtils
 import com.cobblemon.mod.common.CobblemonBlocks
@@ -153,6 +154,7 @@ object TumblestoneHarvester : Worker {
         } else {
             world.setBlockState(tumblestonePos, Blocks.AIR.defaultState)
         }
+        CobbleworkersJobEffects.playHarvestEffect(world, pokemonEntity, "tumblestone")
     }
 
     /**

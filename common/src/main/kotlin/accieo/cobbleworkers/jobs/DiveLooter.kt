@@ -12,6 +12,7 @@ import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
 import accieo.cobbleworkers.utilities.CobbleworkersInventoryUtils
+import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import net.minecraft.item.ItemStack
 import net.minecraft.loot.context.LootContextParameterSet
@@ -93,6 +94,7 @@ object DiveLooter : Worker {
         if (drops.isNotEmpty()) {
             lastGenerationTime[pokemonId] = now
             heldItemsByPokemon[pokemonId] = drops
+            CobbleworkersJobEffects.playGenerationEffect(world, pokemonEntity, "diving")
         }
     }
 }

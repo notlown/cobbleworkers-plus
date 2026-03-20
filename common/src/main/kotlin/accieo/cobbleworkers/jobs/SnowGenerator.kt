@@ -12,6 +12,7 @@ import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
 import accieo.cobbleworkers.utilities.CobbleworkersCauldronUtils
+import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
 import accieo.cobbleworkers.utilities.CobbleworkersTypeUtils
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
@@ -76,6 +77,7 @@ object SnowGenerator : Worker {
 
         if (CobbleworkersNavigationUtils.isPokemonAtPosition(pokemonEntity, currentTarget)) {
             CobbleworkersCauldronUtils.addFluid(world, closestCauldron, CobbleworkersCauldronUtils.CauldronFluid.POWDER_SNOW)
+            CobbleworkersJobEffects.playWaterEffect(world, pokemonEntity, "snow")
             lastGenerationTime[pokemonId] = now
             CobbleworkersNavigationUtils.releaseTarget(pokemonId, world)
         }

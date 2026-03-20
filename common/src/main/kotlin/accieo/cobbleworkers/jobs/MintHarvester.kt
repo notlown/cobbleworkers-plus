@@ -13,6 +13,7 @@ import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
 import accieo.cobbleworkers.utilities.CobbleworkersInventoryUtils
+import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
 import accieo.cobbleworkers.utilities.CobbleworkersTypeUtils
 import com.cobblemon.mod.common.block.MintBlock
@@ -132,6 +133,7 @@ object MintHarvester : Worker {
         }
 
         world.setBlockState(mintPos, mintState.with(MintBlock.AGE, 0), Block.NOTIFY_ALL)
+        CobbleworkersJobEffects.playHarvestEffect(world, pokemonEntity, "mints")
     }
 
     /**

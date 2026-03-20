@@ -12,6 +12,7 @@ import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
 import accieo.cobbleworkers.utilities.CobbleworkersInventoryUtils
+import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
 import accieo.cobbleworkers.utilities.CobbleworkersTypeUtils
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
@@ -84,6 +85,7 @@ object GroundItemGatherer : Worker {
             val stack = closestItem.stack.copy()
             closestItem.discard()
             heldItemsByPokemon[pokemonId] = listOf(stack)
+            CobbleworkersJobEffects.playHarvestEffect(world, pokemonEntity, "groundItem")
             CobbleworkersNavigationUtils.releaseTarget(pokemonId, world)
         }
     }
