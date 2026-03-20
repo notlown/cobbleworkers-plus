@@ -18,6 +18,12 @@ This fork focuses on improving existing job mechanics, fixing bugs, and adding q
 - **Loot generation fix** — Fixed an issue where the fishing loot table returned empty results because the origin position was set to the Pasture Block instead of the Pokémon's position near water.
 - **Catch effects** — Pokémon now play their cry and spawn splash/fishing/bubble particles on a successful catch.
 
+### 🎬 Job Effects System — All 22 Jobs
+- **Attack animations** — Pokémon play `physical` (harvest jobs) or `special` (generation jobs) attack animations on success
+- **Themed particles** — Each job type has unique particles: splash for fishing, flames for fire, hearts for healing, clouds for extinguishing, etc.
+- **Pokémon cry** on every successful action
+- **Per-job toggles** — Enable/disable effects for each job individually via config, plus a global master toggle
+
 > See the full [CHANGELOG.md](CHANGELOG.md) for all technical details.
 
 ## 📋 All Available Jobs
@@ -54,6 +60,7 @@ Each job can be customized via `config/cobbleworkers.json`:
 - Set which Pokémon types can perform each job
 - Add specific Pokémon by name
 - Adjust cooldowns, search radius, and more
+- Toggle job effects (animations, particles, cry) globally or per job
 
 Cobbleworkers uses [Cloth Config](https://www.curseforge.com/minecraft/mc-mods/cloth-config) and [Mod Menu](https://www.curseforge.com/minecraft/mc-mods/modmenu) for easy in-game tweaking on integrated servers.
 

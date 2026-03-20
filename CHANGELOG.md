@@ -19,10 +19,30 @@ All changes compared to the original [Cobbleworkers](https://github.com/Accieo/c
   - Fishing wake particles (`FISHING`) appear on the water surface
   - Bubble particles (`BUBBLE`) rise from underwater
 
+### 🎬 Job Effects System - All Jobs
+
+#### Added
+- **New `CobbleworkersJobEffects` utility** — Centralized effect system for all 22 jobs
+- **Attack animations on success:**
+  - Harvest jobs (Apricorn, Berry, Crop, Mint, Amethyst, Tumblestone, Netherwart, Honey, Irrigation, Ground Items): `physical` attack animation + green sparkle particles
+  - Generation jobs (Archeology, Diving, Pick-up, Scouts): `special` attack animation + green sparkle particles
+  - Fishing: `special` attack animation + water splash/fishing/bubble particles
+  - Fire jobs (Lava, Fuel, Brewing Stand Fuel): `special` attack animation + flame particles
+  - Water/Snow generation: `special` attack animation + splash/drip particles
+  - Healing: `special` attack animation + heart particles
+  - Fire Extinguisher: `special` attack animation + cloud particles
+- **Per-job config toggles** — New `jobEffects` config group with:
+  - `globalEffectsEnabled` — Master toggle for all effects
+  - Individual toggle per job (e.g. `fishingEffects`, `healingEffects`, etc.)
+- **Pokémon cry** plays on every successful job action (respects toggle)
+
 ### 📝 Files Changed
 
 | File | Change |
 |------|--------|
 | `FishingLootGenerator.kt` | Complete overhaul: near-water detection, active water navigation, loot origin fix, catch effects |
-| `README.md` | New documentation for the fork with all jobs listed, build instructions, and project structure |
-| `CHANGELOG.md` | New file tracking all changes vs. original |
+| `CobbleworkersJobEffects.kt` | New file: centralized effect system with per-job themed effects |
+| `CobbleworkersConfig.kt` | Added `JobEffectsGroup` with global + per-job effect toggles |
+| All 22 job files | Added effect calls on successful job completion |
+| `README.md` | Full fork documentation |
+| `CHANGELOG.md` | All changes vs. original |
