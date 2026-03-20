@@ -1,5 +1,5 @@
 {
-  "text.autoconfig.cobbleworkers.title": "Cobbleworkers config",
+  "text.autoconfig.cobbleworkers.title": "Cobbleworkers Plus config",
   "text.autoconfig.cobbleworkers.option.general": "General settings",
   "text.autoconfig.cobbleworkers.option.general.searchRadius": "Jobs search radius",
   "text.autoconfig.cobbleworkers.option.general.searchHeight": "Jobs search height",
@@ -123,5 +123,30 @@
   "text.autoconfig.cobbleworkers.option.scouts.useAllStructures": "Generate maps for all registered in-game structures",
   "text.autoconfig.cobbleworkers.option.scouts.mapNameIsHidden": "Structure name is hidden in map item",
   "text.autoconfig.cobbleworkers.option.scouts.structureTags": "Structure tags",
-  "text.autoconfig.cobbleworkers.option.scouts.typeScouts": "Pokémon type that generates maps"
+  "text.autoconfig.cobbleworkers.option.scouts.typeScouts": "Pokémon type that generates maps",
+
+  "text.autoconfig.cobbleworkers.option.jobEffects": "Job Effects (Animations & Particles)",
+  "text.autoconfig.cobbleworkers.option.jobEffects.globalEffectsEnabled": "Enable all job effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.apricornEffects": "Apricorn harvesting effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.irrigationEffects": "Crop irrigation effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.amethystEffects": "Amethyst harvesting effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.tumblestoneEffects": "Tumblestone harvesting effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.cropHarvestEffects": "Crop harvesting effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.berriesEffects": "Berry harvesting effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.honeyEffects": "Honey collecting effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.mintsEffects": "Mint harvesting effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.lavaEffects": "Lava generation effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.waterEffects": "Water generation effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.snowEffects": "Powder snow generation effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.fishingEffects": "Fishing effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.pickupEffects": "Pick-up loot effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.divingEffects": "Diving loot effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.groundItemEffects": "Item gathering effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.netherwartEffects": "Netherwart harvesting effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.healingEffects": "Healing effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.fuelEffects": "Fuel generation effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.brewingStandFuelEffects": "Brewing stand fuel effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.extinguisherEffects": "Fire extinguisher effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.archeologyEffects": "Archeology effects",
+  "text.autoconfig.cobbleworkers.option.jobEffects.scoutsEffects": "Scouting effects"
 }

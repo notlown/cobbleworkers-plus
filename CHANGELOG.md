@@ -4,6 +4,16 @@ All changes compared to the original [Cobbleworkers](https://github.com/Accieo/c
 
 ## [1.8.0-plus.1] - 2026-03-20
 
+### 🏷️ Branding & UI
+
+#### Changed
+- **Mod name** — Renamed to "Cobbleworkers Plus" in Mod Menu and config screen
+- **Config title** — Shows "Cobbleworkers Plus config" instead of "Cobbleworkers config"
+- **Mod metadata** — Updated authors (notlown + Accieo), description, and links to fork repo
+
+#### Fixed
+- **Config labels** — Added missing translation keys for the entire `jobEffects` config group. All 24 effect toggles now show readable names instead of raw translation keys
+
 ### 🎣 Fishing Job - Major Overhaul
 
 #### Fixed
