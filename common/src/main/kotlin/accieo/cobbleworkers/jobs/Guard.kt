@@ -15,10 +15,16 @@ import accieo.cobbleworkers.utilities.CobbleworkersInventoryUtils
 import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
 import accieo.cobbleworkers.utilities.CobbleworkersTypeUtils
-import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import net.minecraft.item.ItemStack
+import net.minecraft.loot.context.LootContextParameterSet
+import net.minecraft.loot.context.LootContextParameters
+import net.minecraft.loot.context.LootContextTypes
 import net.minecraft.server.world.ServerWorld
+import net.minecraft.loot.LootTable
+import net.minecraft.registry.RegistryKey
+import net.minecraft.registry.RegistryKeys
+import net.minecraft.util.Identifier
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
 import net.minecraft.world.World
@@ -85,9 +91,20 @@ object Guard : Worker {
                 // Under level cap - give XP directly
                 pokemon.addExperience(GuardExperienceSource, config.xpPerRepel)
             } else {
-                // At level cap - chance to drop XS Exp Candy into chest
+                // At level cap - chance to generate loot from guard loot table
                 if (world.random.nextInt(100) < config.candyDropChance) {
-                    heldItemsByPokemon[pokemonId] = listOf(ItemStack(CobblemonItems.EXPERIENCE_CANDY_XS))
+                    val lootParams = LootContextParameterSet.Builder(world)
+                        .add(LootContextParameters.ORIGIN, pokemonEntity.pos)
+                        .addOptional(LootContextParameters.THIS_ENTITY, pokemonEntity)
+                        .build(LootContextTypes.CHEST)
+
+                    val lootTableKey = RegistryKey.of(RegistryKeys.LOOT_TABLE, Identifier.of("cobbleworkers", "guard_loot"))
+                    val lootTable = world.server.reloadableRegistries.getLootTable(lootTableKey)
+                    val drops = lootTable.generateLoot(lootParams)
+
+                    if (drops.isNotEmpty()) {
+                        heldItemsByPokemon[pokemonId] = drops
+                    }
                 }
             }
 

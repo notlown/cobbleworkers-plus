@@ -25,7 +25,7 @@ This fork focuses on improving existing job mechanics, fixing bugs, and adding q
 ### 🛡️ New Job: Guard
 - **Wild Pokémon repelling** — Fighting-type Pokémon patrol and chase away wild Pokémon near the Pasture Block
 - **XP reward** — Guard earns 50 XP per repel (configurable, half an XS Experience Candy)
-- **Level cap aware** — At max level, 20% chance to find XS Exp Candy instead (deposited into chest). Drop chance configurable
+- **Level cap aware** — At max level, 20% chance to generate loot instead (Exp Candies, 1% Rare Candy, potions). Full loot table, customizable
 - **Attack animations + angry/crit particles** on successful repel
 
 ### 😴 Stamina System
