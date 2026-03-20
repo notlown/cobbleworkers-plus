@@ -173,6 +173,7 @@
   "text.autoconfig.cobbleworkers.option.guard.guardCooldownSeconds": "Cooldown (seconds)",
   "text.autoconfig.cobbleworkers.option.guard.guardRadius": "Patrol radius",
   "text.autoconfig.cobbleworkers.option.guard.xpPerRepel": "XP per wild Pokémon repelled",
+  "text.autoconfig.cobbleworkers.option.guard.candyDropChance": "Exp Candy drop chance at level cap (%)",
   "text.autoconfig.cobbleworkers.option.guard.typeGuards": "Pokémon type",
   "text.autoconfig.cobbleworkers.option.guard.guards": "Additional Pokémon (exceptions)"
 }

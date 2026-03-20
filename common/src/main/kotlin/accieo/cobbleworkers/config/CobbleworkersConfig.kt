@@ -328,11 +328,13 @@ class CobbleworkersConfig : ConfigData {
     class GuardGroup {
         var guardsEnabled = true
         var effectsEnabled = true
-        var guardCooldownSeconds: Long = 30
+        var guardCooldownSeconds: Long = 120
         @ConfigEntry.BoundedDiscrete(min = 1, max = 20)
         var guardRadius = 10
         @ConfigEntry.BoundedDiscrete(min = 10, max = 500)
         var xpPerRepel = 50
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
+        var candyDropChance = 20
         @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.DROPDOWN)
         var typeGuards: CobbleworkersConfigPokemonType = CobbleworkersConfigPokemonType.FIGHTING
         var guards: MutableList<String> = mutableListOf("ditto")

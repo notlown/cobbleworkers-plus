@@ -11,10 +11,13 @@ package accieo.cobbleworkers.jobs
 import accieo.cobbleworkers.config.CobbleworkersConfigHolder
 import accieo.cobbleworkers.enums.JobType
 import accieo.cobbleworkers.interfaces.Worker
+import accieo.cobbleworkers.utilities.CobbleworkersInventoryUtils
 import accieo.cobbleworkers.utilities.CobbleworkersJobEffects
 import accieo.cobbleworkers.utilities.CobbleworkersNavigationUtils
 import accieo.cobbleworkers.utilities.CobbleworkersTypeUtils
+import com.cobblemon.mod.common.CobblemonItems
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
+import net.minecraft.item.ItemStack
 import net.minecraft.server.world.ServerWorld
 import net.minecraft.util.math.BlockPos
 import net.minecraft.util.math.Box
@@ -31,7 +34,8 @@ object Guard : Worker {
     private val config get() = CobbleworkersConfigHolder.config.guard
     private val cooldownTicks get() = config.guardCooldownSeconds * 20L
     private val lastGuardTime = mutableMapOf<UUID, Long>()
-    private val currentTarget = mutableMapOf<UUID, Int>() // entity ID of wild mon being chased
+    private val heldItemsByPokemon = mutableMapOf<UUID, List<ItemStack>>()
+    private val failedDepositLocations = mutableMapOf<UUID, MutableSet<BlockPos>>()
 
     override val jobType: JobType = JobType.Generic
     override val blockValidator: ((World, BlockPos) -> Boolean)? = null
@@ -45,11 +49,17 @@ object Guard : Worker {
         if (world !is ServerWorld) return
         val pokemonId = pokemonEntity.pokemon.uuid
         val now = world.time
+        val heldItems = heldItemsByPokemon[pokemonId]
+
+        // If holding items (exp candy), deposit first
+        if (!heldItems.isNullOrEmpty()) {
+            CobbleworkersInventoryUtils.handleDepositing(world, origin, pokemonEntity, heldItems, failedDepositLocations, heldItemsByPokemon)
+            return
+        }
 
         // Cooldown check
         val lastTime = lastGuardTime[pokemonId] ?: 0L
         if (now - lastTime < cooldownTicks) {
-            // Show working particles while patrolling
             if (now % 40 == 0L) {
                 CobbleworkersJobEffects.playWorkingParticles(world, pokemonEntity, "guard")
             }
@@ -67,26 +77,25 @@ object Guard : Worker {
 
         val targetMon = wildMons.minByOrNull { it.squaredDistanceTo(pokemonEntity) } ?: return
 
-        // Check if we're close enough to the wild mon
         if (CobbleworkersNavigationUtils.isPokemonAtPosition(pokemonEntity, targetMon.blockPos, 3.0)) {
-            // Repel the wild Pokemon!
             lastGuardTime[pokemonId] = now
 
-            // Give XP to the guard Pokemon
-            val xpAmount = config.xpPerRepel
             val pokemon = pokemonEntity.pokemon
             if (pokemon.canLevelUpFurther()) {
-                pokemon.addExperience(GuardExperienceSource, xpAmount)
+                // Under level cap - give XP directly
+                pokemon.addExperience(GuardExperienceSource, config.xpPerRepel)
+            } else {
+                // At level cap - chance to drop XS Exp Candy into chest
+                if (world.random.nextInt(100) < config.candyDropChance) {
+                    heldItemsByPokemon[pokemonId] = listOf(ItemStack(CobblemonItems.EXPERIENCE_CANDY_XS))
+                }
             }
 
-            // Remove the wild Pokemon (repelled)
             targetMon.discard()
 
-            // Play success effects
             CobbleworkersJobEffects.playWorkStartEffect(world, pokemonEntity, "guard")
             CobbleworkersJobEffects.playSuccessCry(world, pokemonEntity, "guard")
         } else {
-            // Navigate towards the wild mon
             CobbleworkersNavigationUtils.navigateTo(pokemonEntity, targetMon.blockPos)
         }
     }

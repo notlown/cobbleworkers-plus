@@ -25,6 +25,7 @@ This fork focuses on improving existing job mechanics, fixing bugs, and adding q
 ### 🛡️ New Job: Guard
 - **Wild Pokémon repelling** — Fighting-type Pokémon patrol and chase away wild Pokémon near the Pasture Block
 - **XP reward** — Guard earns 50 XP per repel (configurable, half an XS Experience Candy)
+- **Level cap aware** — At max level, 20% chance to find XS Exp Candy instead (deposited into chest). Drop chance configurable
 - **Attack animations + angry/crit particles** on successful repel
 
 ### 😴 Stamina System
@@ -66,7 +67,7 @@ This fork focuses on improving existing job mechanics, fixing bugs, and adding q
 | 🗺️ Scouting | Flying | Creates explorer maps |
 | 🧹 Item Gathering | Psychic | Picks up items on the ground |
 | 🌿 Netherwart Harvesting | Ghost | Harvests and replants netherwart |
-| 🛡️ Guard | Fighting | Repels wild Pokémon and earns XP |
+| 🛡️ Guard | Fighting | Repels wild Pokémon, earns XP or Exp Candy at level cap |
 | 💧 Crop Irrigation | Water | Hydrates farmland |
 
 ## ⚙️ Configuration

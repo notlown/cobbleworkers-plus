@@ -60,7 +60,8 @@ All changes compared to the original [Cobbleworkers](https://github.com/Accieo/c
 #### Added
 - **Guard job** — Fighting-type Pokémon patrol the area around the Pasture Block, chase and repel wild Pokémon
 - **XP reward** — Guard earns 50 XP per wild Pokémon repelled (half an XS Experience Candy, configurable)
-- **Config options:** enabled, cooldown (30s default), patrol radius (10 blocks), XP per repel, Pokémon type (FIGHTING default)
+- **Level cap respect** — When a Pokémon is at max level (`canLevelUpFurther() == false`), it has a 20% chance (configurable) to find an XS Experience Candy instead of gaining XP. The candy is deposited into the nearest chest
+- **Config options:** enabled, cooldown (120s default), patrol radius (10 blocks), XP per repel, candy drop chance (%), Pokémon type (FIGHTING default)
 - **Custom ExperienceSource** (`GuardExperienceSource`) marked as sidemod for compatibility
 - **Effects:** Angry villager particles while patrolling, attack animation + crit particles + smoke on repel
 
