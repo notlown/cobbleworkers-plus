@@ -30,7 +30,7 @@ This fork focuses on improving existing job mechanics, fixing bugs, and adding q
 
 ### 📈 Passive XP
 - **All pastured Pokémon** slowly gain XP over time (even sleeping/idle ones)
-- Default: 10 XP every 5 minutes (~1 level per real day of play)
+- Default: 125 XP every 60 seconds (~1 level per in-game day at mid-levels)
 - Configurable amount and interval, respects level cap
 
 ### 😴 Stamina System

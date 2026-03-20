@@ -77,7 +77,7 @@ All changes compared to the original [Cobbleworkers](https://github.com/Accieo/c
 
 #### Added
 - **Passive XP** — All Pokémon in the Pasture slowly gain XP over time, even while sleeping or idle
-- Default: **10 XP every 5 minutes** (~1 level per real day of play at mid-levels)
+- Default: **125 XP every 60 seconds** (~1 level per in-game day at mid-levels)
 - Respects level cap (`canLevelUpFurther()`)
 - **Config:** `passiveXpEnabled`, `passiveXpAmount` (1-100), `passiveXpIntervalSeconds`
 

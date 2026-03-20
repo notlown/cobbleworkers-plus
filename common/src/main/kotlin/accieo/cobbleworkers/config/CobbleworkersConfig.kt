@@ -96,9 +96,9 @@ class CobbleworkersConfig : ConfigData {
         var searchHeight = 5
         var globalJobEffectsEnabled = true
         var passiveXpEnabled = true
-        @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
-        var passiveXpAmount = 10
-        var passiveXpIntervalSeconds: Long = 300
+        @ConfigEntry.BoundedDiscrete(min = 1, max = 500)
+        var passiveXpAmount = 125
+        var passiveXpIntervalSeconds: Long = 60
         var staminaEnabled = false
         @ConfigEntry.BoundedDiscrete(min = 1, max = 50)
         var staminaCharges = 10
