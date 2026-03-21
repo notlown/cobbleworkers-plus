@@ -22,6 +22,12 @@ This fork focuses on improving existing job mechanics, fixing bugs, and adding q
 - **Distance-based chest selection** — Each Pokémon goes to its nearest free chest instead of all targeting the same one
 - **No more unnecessary item drops** — Retries all chests when they're full instead of dropping items on the ground
 
+### 🎯 Job Assignment GUI
+- **Shift+Click** a Pokémon in the Pasture GUI to cycle through available jobs
+- **Auto mode** (default) — works all matching jobs like the original
+- **Specific job mode** — only performs the assigned job (e.g. Water-type only fishes)
+- Shows "Job: Auto" or "Job: Fishing" etc. on each Pokémon slot
+
 ### 🛡️ New Job: Guard
 - **Wild Pokémon repelling** — Fighting-type Pokémon patrol and chase away wild Pokémon near the Pasture Block
 - **XP reward** — Guard earns 50 XP per repel (configurable, half an XS Experience Candy)

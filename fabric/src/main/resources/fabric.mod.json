@@ -36,7 +36,8 @@
     ]
   },
   "mixins": [
-    "cobbleworkers.mixins.json"
+    "cobbleworkers.mixins.json",
+    "cobbleworkers-fabric.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.16.14",

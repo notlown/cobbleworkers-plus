@@ -15,13 +15,8 @@ import accieo.cobbleworkers.utilities.DeferredBlockScanner
 import com.cobblemon.mod.common.entity.pokemon.PokemonEntity
 import net.minecraft.util.math.BlockPos
 import net.minecraft.world.World
-import kotlin.collections.filter
-import kotlin.collections.forEach
 
 object WorkerDispatcher {
-    /**
-     * Worker registry.
-     */
     private val workers: List<Worker> = listOf(
         ApricornHarvester,
         AmethystHarvester,
@@ -48,35 +43,31 @@ object WorkerDispatcher {
         Guard,
     )
 
-    /**
-     * Gathers all block validators from registered workers.
-     */
     private val jobValidators: Map<JobType, (World, BlockPos) -> Boolean> = workers
         .mapNotNull { worker -> worker.blockValidator?.let { worker.jobType to it } }
         .toMap()
 
     /**
-     * Ticks the deferred block scanning for a single pasture.
-     * Called ONCE per pasture per tick.
+     * Public access to worker list (used by JobAssignmentManager to check available jobs).
      */
+    fun getWorkers(): List<Worker> = workers
+
     fun tickAreaScan(world: World, pastureOrigin: BlockPos) {
-        DeferredBlockScanner.tickPastureAreaScan(
-            world,
-            pastureOrigin,
-            jobValidators
-        )
+        DeferredBlockScanner.tickPastureAreaScan(world, pastureOrigin, jobValidators)
     }
 
     /**
      * Ticks the action logic for a specific Pokémon.
-     * Called ONCE per Pokémon in the pasture per tick.
+     * Respects job assignments - if a job is assigned, only that job runs.
      */
     fun tickPokemon(world: World, pastureOrigin: BlockPos, pokemonEntity: PokemonEntity) {
-        // Check stamina - if resting, skip all jobs (Zzz particles handled inside isResting)
         if (CobbleworkersStamina.isResting(world, pokemonEntity)) return
+
+        val pokemonId = pokemonEntity.pokemon.uuid
 
         workers
             .filter { it.shouldRun(pokemonEntity) }
+            .filter { JobAssignmentManager.isJobAllowed(pokemonId, it.jobType) }
             .forEach { it.tick(world, pastureOrigin, pokemonEntity) }
     }
 }

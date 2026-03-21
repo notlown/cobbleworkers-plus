@@ -73,6 +73,18 @@ All changes compared to the original [Cobbleworkers](https://github.com/Accieo/c
 - **Custom ExperienceSource** (`GuardExperienceSource`) marked as sidemod for compatibility
 - **Effects:** Angry villager particles while patrolling, attack animation + crit particles + smoke on repel
 
+### 🎯 Job Assignment GUI
+
+#### Added
+- **Job assignment per Pokémon** — Shift+Click a Pokémon in the Pasture GUI to cycle through available jobs
+- **"Job: Auto" label** on each Pokémon slot showing current assignment
+- **"[Shift+Click to change]" hint** when hovering a slot
+- **Auto mode** (default) — Pokémon works all matching jobs like the original
+- **Specific job mode** — Pokémon only performs the assigned job (e.g. a Water-type only fishes, doesn't also extinguish fires)
+- **Network packet** (`JobAssignmentC2SPacket`) — Client sends job selection to server
+- **WorkerDispatcher integration** — Jobs check `JobAssignmentManager.isJobAllowed()` before running
+- **Internal job types** (Generic, CauldronGenerator) automatically skipped in the cycle
+
 ### 📈 Passive XP
 
 #### Added
