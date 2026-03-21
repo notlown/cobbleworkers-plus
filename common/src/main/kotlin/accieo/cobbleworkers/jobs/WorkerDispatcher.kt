@@ -64,10 +64,18 @@ object WorkerDispatcher {
         if (CobbleworkersStamina.isResting(world, pokemonEntity)) return
 
         val pokemonId = pokemonEntity.pokemon.uuid
+        val assignedJob = JobAssignmentManager.getAssignment(pokemonId)
 
-        workers
-            .filter { it.shouldRun(pokemonEntity) }
-            .filter { JobAssignmentManager.isJobAllowed(pokemonId, it.jobType) }
-            .forEach { it.tick(world, pastureOrigin, pokemonEntity) }
+        if (assignedJob != null) {
+            // Manual assignment: run ONLY the assigned job, skip type check
+            workers
+                .filter { it.jobType == assignedJob }
+                .forEach { it.tick(world, pastureOrigin, pokemonEntity) }
+        } else {
+            // Auto mode: original behavior - type check + all matching jobs
+            workers
+                .filter { it.shouldRun(pokemonEntity) }
+                .forEach { it.tick(world, pastureOrigin, pokemonEntity) }
+        }
     }
 }
